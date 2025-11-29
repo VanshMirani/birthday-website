@@ -9,7 +9,7 @@
 
 /* ========== Editable settings ========== */
 const birthdayYear = (new Date()).getFullYear();
-const birthdayMonth = 12;
+const birthdayMonth = 11;
 const birthdayDay = 13;
 
 const NOTES = [
