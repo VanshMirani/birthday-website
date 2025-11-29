@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>✧ Happy Birthday ✧</title>
+
+  <!-- Google font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700;900&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <main id="app">
+    <!-- Landing -->
+    <section class="page" id="page-landing">
+      <div class="center-card">
+        <h1 class="title">A little surprise for you 🎁✨</h1>
+        <p class="subtitle">Tap the button and step inside — full of love, laughs & memories! 💖</p>
+        <button id="startBtn" class="btn big">Open the Surprise 🎉</button>
+        <p class="tiny">Scan the QR and open this on your phone for the best experience 😊</p>
+      </div>
+    </section>
+
+    <!-- Countdown -->
+    <section class="page hidden" id="page-countdown">
+      <div class="center-card">
+        <h2 id="countdownLabel">Countdown to your day 🥳</h2>
+        <div id="countdown" class="countdown">
+          <div><span id="days">00</span><small>Days</small></div>
+          <div><span id="hours">00</span><small>Hours</small></div>
+          <div><span id="mins">00</span><small>Minutes</small></div>
+          <div><span id="secs">00</span><small>Seconds</small></div>
+        </div>
+
+        <div id="onDate" class="hidden">
+          <div class="big-count" id="bigCount">3</div>
+          <p class="subtitle">Get ready... 🎂</p>
+        </div>
+
+        <button id="toCakeBtn" class="btn">Celebrate Now 🥳</button>
+        <p class="tiny">Tip: if you don't see the countdown update, refresh the page.</p>
+      </div>
+    </section>
+
+    <!-- Cake -->
+    <section class="page hidden" id="page-cake">
+      <div class="center-card cake-card">
+        <h2>Make a wish & blow the candles! 🕯️🎂</h2>
+        <div id="cakeArea">
+          <!-- simple stylized cake image (SVG) -->
+          <svg id="cakeSvg" width="320" height="220" viewBox="0 0 320 220" xmlns="http://www.w3.org/2000/svg" class="cake-svg" role="img" aria-label="birthday cake">
+            <rect x="40" y="120" rx="16" ry="16" width="240" height="80" class="cake-base"/>
+            <path d="M40 120 q40 -36 120 0 t120 0 v-12 h-240z" class="icing"/>
+            <!-- candles group -->
+            <g id="candles">
+              <g class="candle" transform="translate(100,60)">
+                <rect x="-6" y="0" width="12" height="48" rx="3" class="candle-stick"/>
+                <g class="flame">
+                  <ellipse cx="0" cy="-6" rx="6" ry="8" class="flame-core"/>
+                </g>
+              </g>
+              <g class="candle" transform="translate(160,50)">
+                <rect x="-6" y="0" width="12" height="58" rx="3" class="candle-stick"/>
+                <g class="flame">
+                  <ellipse cx="0" cy="-6" rx="6" ry="8" class="flame-core"/>
+                </g>
+              </g>
+            </g>
+          </svg>
+        </div>
+
+        <p class="hint">Tap the cake to blow the candles (tap more gently on mobile) 💨</p>
+
+     <div class="buttons-row">
+         <button id="afterBlowBtn" class="btn hidden">Open messages 💌</button>
+         <button id="playTune" class="btn ghost">Play tune ▶️</button>
+         <button id="micBlowBtn" class="btn ghost small">Blow into mic 🌬️</button>
+     </div>
+        <p class="tiny" id="micHint" style="margin-top:8px;display:none;color:#666">Allow microphone access and blow gently toward your phone/mic. Adjust sensitivity in JS if needed.</p>
+      </div>
+    </section>
+
+    <!-- Notes -->
+    <section class="page hidden" id="page-notes">
+      <div class="center-card">
+        <h2>Little notes & wishes ✨</h2>
+        <div id="notesArea" class="notes-area"></div>
+        <div style="margin-top:18px">
+          <button id="toFlashbackBtn" class="btn">See Memories 📸</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Flashback -->
+    <section class="page hidden" id="page-flashback">
+      <div class="center-card">
+        <h2>Flashback: our favorite moments 💫</h2>
+        <div class="gallery" id="gallery">
+          <!-- images injected or use static <img> placeholders -->
+          <img src="assets/images/photo1.jpg" alt="photo1" />
+          <img src="assets/images/photo2.jpg" alt="photo2" />
+          <img src="assets/images/photo3.jpg" alt="photo3" />
+        </div>
+
+        <div class="video-wrap">
+          <video controls width="320" src="assets/video/flashback.mp4"></video>
+        </div>
+
+        <button id="toCardBtn" class="btn">Open Final Card 💕</button>
+      </div>
+    </section>
+
+    <!-- Final card -->
+    <section class="page hidden" id="page-card">
+      <div class="center-card final-card">
+        <h2>Happy Birthday 🎉🎈</h2>
+        <div class="birthday-card">
+          <!-- EDIT THIS final message -->
+          <p id="finalMessage" class="final-message">
+            Hey lovely! 🌸 On your special day I wish you oceans of smiles, bucketloads of cake, and all the wild, wonderful adventures you dream of. You light up rooms, make hearts warmer, and I’m so grateful for you. Keep shining — today is all about YOU! ✨💗🎂
+          </p>
+
+          <div class="final-actions">
+            <button id="downloadCard" class="btn small">Download Card</button>
+            <button id="shareBtn" class="btn ghost small">Share ❤️</button>
+          </div>
+        </div>
+
+        <div class="footer">
+          <button id="restartBtn" class="btn ghost">Restart</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- confetti canvas -->
+    <canvas id="confettiCanvas" class="confetti-canvas"></canvas>
+  </main>
+
+  <!-- Optional audio for birthday tune (please add file to assets/audio/bday.mp3) -->
+  <audio id="bdayAudio" src="assets/audio/bday.mp3" preload="auto"></audio>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
