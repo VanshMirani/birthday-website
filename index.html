@@ -5,140 +5,203 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>✧ Happy Birthday ✧</title>
 
-  <!-- Google font -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700;900&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="css/styles.css" />
 </head>
+
 <body>
   <main id="app">
-    <!-- Landing -->
+
+    <!-- Landing Page -->
     <section class="page" id="page-landing">
-      <div class="center-card">
+      <div class="center-card fade-in">
         <h1 class="title">A little surprise for you 🎁✨</h1>
-        <p class="subtitle">Tap the button and step inside — full of love, laughs & memories! 💖</p>
+        <p class="subtitle">Tap the button & step inside — full of love, laughs & memories! 💖</p>
         <button id="startBtn" class="btn big">Open the Surprise 🎉</button>
       </div>
     </section>
 
-    <!-- Countdown -->
+    <!-- Countdown Page -->
     <section class="page hidden" id="page-countdown">
-      <div class="center-card">
-        <h2 id="countdownLabel">Countdown to your day 🥳</h2>
-        <div id="countdown" class="countdown">
+      <div class="center-card fade-in">
+        <h2 class="title">Countdown to your day 🥳</h2>
+
+        <div id="countdown" class="countdown smooth-count">
           <div><span id="days">00</span><small>Days</small></div>
           <div><span id="hours">00</span><small>Hours</small></div>
           <div><span id="mins">00</span><small>Minutes</small></div>
           <div><span id="secs">00</span><small>Seconds</small></div>
         </div>
 
-        <div id="onDate" class="hidden">
+        <div id="onDate" class="hidden fade-scale">
           <div class="big-count" id="bigCount">3</div>
-          <p class="subtitle">Get ready... 🎂</p>
+          <p class="subtitle">Get ready… 🎂</p>
         </div>
-
-        <button id="toCakeBtn" class="btn">Celebrate Now 🥳</button>
-        <p class="tiny">Tip: if you don't see the countdown update, refresh the page.</p>
       </div>
     </section>
 
-    <!-- Cake -->
+    <!-- CAKE PAGE -->
     <section class="page hidden" id="page-cake">
-      <div class="center-card cake-card">
+      <div class="center-card fade-in">
+
         <h2>Make a wish & blow the candles! 🕯️🎂</h2>
-        <div id="cakeArea">
-          <!-- simple stylized cake image (SVG) -->
-          <svg id="cakeSvg" width="320" height="220" viewBox="0 0 320 220" xmlns="http://www.w3.org/2000/svg" class="cake-svg" role="img" aria-label="birthday cake">
-            <rect x="40" y="120" rx="16" ry="16" width="240" height="80" class="cake-base"/>
-            <path d="M40 120 q40 -36 120 0 t120 0 v-12 h-240z" class="icing"/>
-            <!-- candles group -->
+
+        <div id="cakeArea" class="cake-3d-wrap">
+          <svg id="cakeSvg" class="cake-3d-svg" viewBox="0 0 600 520"
+               xmlns="http://www.w3.org/2000/svg" aria-label="3D birthday cake">
+
+            <ellipse cx="300" cy="480" rx="180" ry="40" fill="rgba(0,0,0,0.18)" />
+
+            <!-- 3 Layers -->
+            <g class="layer">
+              <ellipse cx="300" cy="360" rx="200" ry="40" fill="url(#cakeTopGrad)" />
+              <rect x="100" y="200" width="400" height="160" rx="60" fill="url(#cakeSideGrad)" />
+            </g>
+
+            <g class="layer">
+              <ellipse cx="300" cy="250" rx="160" ry="32" fill="url(#cakeTopGrad2)" />
+              <rect x="140" y="140" width="320" height="120" rx="50" fill="url(#cakeSideGrad2)" />
+            </g>
+
+            <g class="layer">
+              <ellipse cx="300" cy="150" rx="120" ry="28" fill="url(#cakeTopGrad3)" />
+              <rect x="180" y="70" width="240" height="90" rx="40" fill="url(#cakeSideGrad3)" />
+            </g>
+
+
+            <defs>
+              <linearGradient id="cakeSideGrad" x1="0" x2="0" y1="0" y2="1">
+                <stop offset="0" stop-color="#ff4fa3" />
+                <stop offset="1" stop-color="#ff2f8a" />
+              </linearGradient>
+
+              <linearGradient id="cakeTopGrad" x1="0" x2="0" y1="0" y2="1">
+                <stop offset="0" stop-color="#ff96cb" />
+                <stop offset="1" stop-color="#ff4fa3" />
+              </linearGradient>
+
+              <linearGradient id="cakeSideGrad2" x1="0" x2="0" y1="0" y2="1">
+                <stop offset="0" stop-color="#ff7abf" />
+                <stop offset="1" stop-color="#ff459f" />
+              </linearGradient>
+
+              <linearGradient id="cakeTopGrad2" x1="0" x2="0" y1="0" y2="1">
+                <stop offset="0" stop-color="#ffb0da" />
+                <stop offset="1" stop-color="#ff6fb8" />
+              </linearGradient>
+
+              <linearGradient id="cakeSideGrad3" x1="0" x2="0" y1="0" y2="1">
+                <stop offset="0" stop-color="#ff9ed1" />
+                <stop offset="1" stop-color="#ff5daf" />
+              </linearGradient>
+
+              <linearGradient id="cakeTopGrad3" x1="0" x2="0" y1="0" y2="1">
+                <stop offset="0" stop-color="#ffd1e9" />
+                <stop offset="1" stop-color="#ff7fc0" />
+              </linearGradient>
+
+              <radialGradient id="flameGrad">
+                <stop offset="0" stop-color="#fff8b3" />
+                <stop offset="0.4" stop-color="#ffcf69" />
+                <stop offset="1" stop-color="#ff873c" />
+              </radialGradient>
+            </defs>
+
+            <!-- 5 Candles -->
             <g id="candles">
-              <g class="candle" transform="translate(100,60)">
-                <rect x="-6" y="0" width="12" height="48" rx="3" class="candle-stick"/>
-                <g class="flame">
-                  <ellipse cx="0" cy="-6" rx="6" ry="8" class="flame-core"/>
-                </g>
+              <g transform="translate(240, 60)">
+                <rect x="-6" y="0" width="12" height="50" rx="4" fill="#ffe7a8" />
+                <ellipse class="flame-core" cx="0" cy="-12" rx="7" ry="12" fill="url(#flameGrad)" />
               </g>
-              <g class="candle" transform="translate(160,50)">
-                <rect x="-6" y="0" width="12" height="58" rx="3" class="candle-stick"/>
-                <g class="flame">
-                  <ellipse cx="0" cy="-6" rx="6" ry="8" class="flame-core"/>
-                </g>
+
+              <g transform="translate(270, 50)">
+                <rect x="-6" y="0" width="12" height="55" rx="4" fill="#ffe7a8" />
+                <ellipse class="flame-core" cx="0" cy="-14" rx="7" ry="12" fill="url(#flameGrad)" />
+              </g>
+
+              <g transform="translate(300, 45)">
+                <rect x="-6" y="0" width="12" height="60" rx="4" fill="#ffe7a8" />
+                <ellipse class="flame-core" cx="0" cy="-16" rx="8" ry="14" fill="url(#flameGrad)" />
+              </g>
+
+              <g transform="translate(330, 50)">
+                <rect x="-6" y="0" width="12" height="55" rx="4" fill="#ffe7a8" />
+                <ellipse class="flame-core" cx="0" cy="-14" rx="7" ry="12" fill="url(#flameGrad)" />
+              </g>
+
+              <g transform="translate(360, 60)">
+                <rect x="-6" y="0" width="12" height="50" rx="4" fill="#ffe7a8" />
+                <ellipse class="flame-core" cx="0" cy="-12" rx="7" ry="12" fill="url(#flameGrad)" />
               </g>
             </g>
+
           </svg>
         </div>
 
-        <p class="hint">Tap the cake to blow the candles (tap more gently on mobile) 💨</p>
+        <div class="buttons-row">
+          <button id="afterBlowBtn" class="btn hidden">Open Messages 💌</button>
+        </div>
 
-     <div class="buttons-row">
-         <button id="afterBlowBtn" class="btn hidden">Open messages 💌</button>
-         <button id="playTune" class="btn ghost">Play tune ▶️</button>
-         <button id="micBlowBtn" class="btn ghost small">Blow into mic 🌬️</button>
-     </div>
-        <p class="tiny" id="micHint" style="margin-top:8px;display:none;color:#666">Allow microphone access and blow gently toward your phone/mic. Adjust sensitivity in JS if needed.</p>
       </div>
     </section>
 
-    <!-- Notes -->
+    <!-- NOTES PAGE -->
     <section class="page hidden" id="page-notes">
-      <div class="center-card">
-        <h2>Little notes & wishes ✨</h2>
+      <div class="center-card fade-in">
+        <h2>Little Notes & Wishes ✨</h2>
         <div id="notesArea" class="notes-area"></div>
-        <div style="margin-top:18px">
-          <button id="toFlashbackBtn" class="btn">See Memories 📸</button>
-        </div>
+        <button id="toFlashbackBtn" class="btn" style="margin-top:20px">See Memories 📸</button>
       </div>
     </section>
 
-    <!-- Flashback -->
+    <!-- FLASHBACK PAGE -->
     <section class="page hidden" id="page-flashback">
-      <div class="center-card">
-        <h2>Flashback: our favorite moments 💫</h2>
-        <div class="gallery" id="gallery">
-          <!-- images injected or use static <img> placeholders -->
-          <img src="assets/images/photo1.jpg" alt="photo1" />
-          <img src="assets/images/photo2.jpg" alt="photo2" />
-          <img src="assets/images/photo3.jpg" alt="photo3" />
-        </div>
+      <div class="center-card fade-in">
+        <h2>Cute Moments 💫</h2>
 
-        <div class="video-wrap">
-          <video controls width="320" src="assets/video/flashback.mp4"></video>
-        </div>
+        <div class="mem-wrap">
+          <img class="mem-img m1" src="assets/images/photo1.jpeg" />
+          <img class="mem-img m2" src="assets/images/photo2.jpeg" />
+          <img class="mem-img m3" src="assets/images/photo3.jpeg" />
+          <img class="mem-img m4" src="assets/images/photo4.jpeg" />
+          <img class="mem-img m5" src="assets/images/photo5.jpeg" />
+          <img class="mem-img m6" src="assets/images/photo6.jpeg" />
+          <img class="mem-img m7" src="assets/images/photo7.jpeg" />
+          <img class="mem-img m8" src="assets/images/photo8.jpeg" />
 
-        <button id="toCardBtn" class="btn">Open Final Card 💕</button>
-      </div>
-    </section>
-
-    <!-- Final card -->
-    <section class="page hidden" id="page-card">
-      <div class="center-card final-card">
-        <h2>Happy Birthday 🎉🎈</h2>
-        <div class="birthday-card">
-          <!-- EDIT THIS final message -->
-          <p id="finalMessage" class="final-message">
-            Hey lovely! 🌸 On your special day I wish you oceans of smiles, bucketloads of cake, and all the wild, wonderful adventures you dream of. You light up rooms, make hearts warmer, and I’m so grateful for you. Keep shining — today is all about YOU! ✨💗🎂
-          </p>
-
-          <div class="final-actions">
-            <button id="downloadCard" class="btn small">Download Card</button>
-            <button id="shareBtn" class="btn ghost small">Share ❤️</button>
+          <div class="video-center">
+            <video controls src="assets/video/flashback.mp4"></video>
           </div>
         </div>
 
-        <div class="footer">
-          <button id="restartBtn" class="btn ghost">Restart</button>
-        </div>
+        <button id="toCardBtn" class="btn" style="margin-top:20px">Open Final Card 💕</button>
       </div>
     </section>
 
-    <!-- confetti canvas -->
+    <!-- FINAL CARD PAGE -->
+    <section class="page hidden" id="page-card">
+      <div class="center-card fade-in final-card">
+        <h2>Happy Birthday Bachhaa🎉🎈</h2>
+
+        <div class="birthday-card">
+          <p id="finalMessage" class="final-message">
+            Hey lovely! 🌸 On your special day I wish you oceans of smiles, bucketloads of cake,
+            and all the wild, wonderful adventures you dream of. You light up rooms, make hearts
+            warmer, and I’m so grateful for you. Keep shining — today is all about YOU! ✨💗🎂
+          </p>
+        </div>
+
+        <button id="restartBtn" class="btn ghost" style="margin-top:15px">Restart</button>
+      </div>
+    </section>
+
     <canvas id="confettiCanvas" class="confetti-canvas"></canvas>
+
   </main>
 
-  <!-- Optional audio for birthday tune (please add file to assets/audio/bday.mp3) -->
-  <audio id="bdayAudio" src="assets/audio/bday.mp3" preload="auto"></audio>
-
+  <audio id="bdayAudio" src="assets/audio/bday.mp3" preload="auto" loop></audio>
   <script src="js/main.js"></script>
+
 </body>
 </html>
