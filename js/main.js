@@ -1,428 +1,438 @@
-// main.js - Enhanced interactive birthday site with smooth 3-2-1 + mic blow detection
-
-/* ========== Editable settings ========== */
-const birthdayYear = (new Date()).getFullYear();
-const birthdayMonth = 12;
+/* =============================
+      CONFIGURATION
+============================= */
+const birthdayYear = new Date().getFullYear();
+const birthdayMonth = 11;  // December
 const birthdayDay = 13;
 
 const NOTES = [
-  "You light up every place you enter ✨",
-  "Remember our coffee day? ☕️ It was the best!",
-  "Wishing you bold dreams & cozy mornings 🌅",
-  "Keep being the amazing human you are 💖",
-  "Save a slice for me! 🍰"
+  "Lucky to have you as my best friend ✨",
+  "Missing our daily talks and roj ni bakchodi so much!!",
+  "Wishing you the happiest birthday, My Dhakkan 🌅💖",
+  "Thank you for always being there for me and understanding me so well 💖",
+  "Hoping this next year becomes the best one of your life 💎✨",
+  "Always ther for you whenever you need me Beta💖💖"
 ];
 
 const GALLERY_IMAGES = [
-  "assets/images/photo1.jpg",
-  "assets/images/photo2.jpg",
-  "assets/images/photo3.jpg"
+  "assets/images/photo1.jpeg",
+  "assets/images/photo2.jpeg",
+  "assets/images/photo3.jpeg",
+  "assets/images/photo4.jpeg",
+  "assets/images/photo5.jpeg",
+  "assets/images/photo6.jpeg",
+  "assets/images/photo7.jpeg",
+  "assets/images/photo8.jpeg"
 ];
 
-const FINAL_MESSAGE_OVERRIDE = "";
-
-/* Microphone sensitivity */
 const MIC_SETTINGS = {
-  threshold: 0.06,
+  threshold: 0.065,
   minBlowMs: 180,
-  maxListenMs: 8000
+  maxListenMs: 12000
 };
-/* ====== End editable settings ======= */
 
-function getTargetDate(){
-  const iso = `${birthdayYear}-${String(birthdayMonth).padStart(2,'0')}-${String(birthdayDay).padStart(2,'0')}T00:00:00+05:30`;
-  return new Date(iso);
+
+/* =============================
+      DOM REFERENCES
+============================= */
+const startBtn       = document.getElementById("startBtn");
+const pageCountdown  = document.getElementById("page-countdown");
+const pageCake       = document.getElementById("page-cake");
+const pageNotes      = document.getElementById("page-notes");
+const pageFlashback  = document.getElementById("page-flashback");
+const pageCard       = document.getElementById("page-card");
+
+const daysEl  = document.getElementById("days");
+const hoursEl = document.getElementById("hours");
+const minsEl  = document.getElementById("mins");
+const secsEl  = document.getElementById("secs");
+
+const onDateEl = document.getElementById("onDate");
+const bigCount = document.getElementById("bigCount");
+
+const cakeSvg = document.getElementById("cakeSvg");
+const candlesGroup = document.getElementById("candles");
+const afterBlowBtn = document.getElementById("afterBlowBtn");
+
+const notesArea = document.getElementById("notesArea");
+const toFlashbackBtn = document.getElementById("toFlashbackBtn");
+const toCardBtn = document.getElementById("toCardBtn");
+const restartBtn = document.getElementById("restartBtn");
+
+const confettiCanvas = document.getElementById("confettiCanvas");
+const confettiCtx = confettiCanvas.getContext("2d");
+
+const bdayAudio = document.getElementById("bdayAudio");
+
+
+/* =============================
+     PAGE SWITCHING (FIXED)
+============================= */
+function originalShowPage(el){
+  document.querySelectorAll(".page").forEach(p => p.classList.add("hidden"));
+  el.classList.remove("hidden");
 }
 
-/* DOM elements */
-const startBtn = document.getElementById('startBtn');
-const pageCountdown = document.getElementById('page-countdown');
-const pageCake = document.getElementById('page-cake');
-const pageNotes = document.getElementById('page-notes');
-const pageFlashback = document.getElementById('page-flashback');
-const pageCard = document.getElementById('page-card');
+const showPage = function(el){
+  originalShowPage(el);
 
-const daysEl = document.getElementById('days');
-const hoursEl = document.getElementById('hours');
-const minsEl = document.getElementById('mins');
-const secsEl = document.getElementById('secs');
-const onDateEl = document.getElementById('onDate');
-const bigCount = document.getElementById('bigCount');
-const toCakeBtn = document.getElementById('toCakeBtn');
+  // premium fade animation
+  el.classList.add("fade-in-page");
+  setTimeout(() => el.classList.remove("fade-in-page"), 700);
 
-const cakeSvg = document.getElementById('cakeSvg');
-const candlesGroup = document.getElementById('candles');
-const afterBlowBtn = document.getElementById('afterBlowBtn');
+  if (el === pageCake){
+    setTimeout(() => {
+      try {
+        bdayAudio.loop = true;
+        bdayAudio.volume = 0.85;
+        bdayAudio.play().catch(()=>{});
+      } catch(e){}
 
-const notesArea = document.getElementById('notesArea');
-const galleryEl = document.getElementById('gallery');
+      setTimeout(() => startAutoListeningOnCake(), 350);
+    }, 400);
+  }
+};
 
-const toFlashbackBtn = document.getElementById('toFlashbackBtn');
-const toCardBtn = document.getElementById('toCardBtn');
-const restartBtn = document.getElementById('restartBtn');
 
-const confettiCanvas = document.getElementById('confettiCanvas');
-const confettiCtx = confettiCanvas.getContext('2d');
-
-const bdayAudio = document.getElementById('bdayAudio');
-const playTuneBtn = document.getElementById('playTune');
-const micBlowBtn = document.getElementById('micBlowBtn');
-const micHint = document.getElementById('micHint');
-
-/* page switch */
-function showPage(el){
-  document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
-  el.classList.remove('hidden');
-}
-
-/* Start button */
-startBtn.addEventListener('click', ()=>{
+/* =============================
+        START BUTTON
+============================= */
+startBtn.addEventListener("click", () => {
+  requestMicPermissionIfNeeded();
   showPage(pageCountdown);
   startCountdown();
 });
 
-/* Countdown logic */
+
+/* =============================
+      COUNTDOWN TIMER
+============================= */
 let countdownTimer = null;
+
+function getTargetDate(){
+  return new Date(`${birthdayYear}-${String(birthdayMonth).padStart(2,"0")}-${String(birthdayDay).padStart(2,"0")}T00:00:00+05:30`);
+}
+
 function startCountdown(){
   const target = getTargetDate();
+
   function tick(){
-    const now = new Date();
+    const now  = new Date();
     const diff = target - now;
 
-    if(diff <= 0){
+    if (diff <= 0){
       clearInterval(countdownTimer);
-      showOnDateCountdown();
+      show3to1();
       return;
     }
 
-    const d = Math.floor(diff / (1000*60*60*24));
-    const h = Math.floor((diff/(1000*60*60))%24);
-    const m = Math.floor((diff/(1000*60))%60);
-    const s = Math.floor((diff/1000)%60);
+    const d = Math.floor(diff / 86400000);
+    const h = Math.floor((diff / 3600000) % 24);
+    const m = Math.floor((diff / 60000)  % 60);
+    const s = Math.floor((diff / 1000)   % 60);
 
-    daysEl.textContent = String(d).padStart(2,'0');
-    hoursEl.textContent = String(h).padStart(2,'0');
-    minsEl.textContent = String(m).padStart(2,'0');
-    secsEl.textContent = String(s).padStart(2,'0');
-
-    if(diff < 60*1000) toCakeBtn.classList.remove('hidden');
-    else toCakeBtn.classList.add('hidden');
+    daysEl.textContent  = String(d).padStart(2,"0");
+    hoursEl.textContent = String(h).padStart(2,"0");
+    minsEl.textContent  = String(m).padStart(2,"0");
+    secsEl.textContent  = String(s).padStart(2,"0");
   }
+
   tick();
   countdownTimer = setInterval(tick, 1000);
 }
 
-/* ============================================================
-   SUPER-SMOOTH 3-2-1 COUNTDOWN
-   ============================================================ */
-function showOnDateCountdown(){
-  document.getElementById('countdown').classList.add('hidden');
-  onDateEl.classList.remove('hidden');
 
-  let numbers = [3, 2, 1];
-  let index = 0;
+/* =============================
+        3 → 2 → 1 ANIMATION
+============================= */
+function show3to1(){
+  document.getElementById("countdown").classList.add("hidden");
+  onDateEl.classList.remove("hidden");
 
-  const animateNumber = () => {
-    bigCount.textContent = numbers[index];
+  let numbers = [3,2,1];
+  let idx = 0;
 
+  function animate(){
+    bigCount.textContent = numbers[idx];
     bigCount.style.opacity = "1";
     bigCount.style.transform = "scale(1)";
 
-    setTimeout(() => {
+    setTimeout(()=>{
       bigCount.style.opacity = "0";
       bigCount.style.transform = "scale(0.6)";
 
-      setTimeout(() => {
-        index++;
-        if (index < numbers.length) {
-          animateNumber();
+      setTimeout(()=>{
+        idx++;
+        if(idx < numbers.length){
+          animate();
         } else {
           bigCount.textContent = "🎉";
           bigCount.style.opacity = "1";
           bigCount.style.transform = "scale(1.2)";
-          setTimeout(() => showPage(pageCake), 700);
+          setTimeout(()=> showPage(pageCake), 800);
         }
-      }, 350);
-    }, 650);
-  };
-
-  animateNumber();
+      },380);
+    },650);
+  }
+  animate();
 }
 
-toCakeBtn.addEventListener('click', ()=> showPage(pageCake));
 
-/* Cake interactions */
+/* =============================
+         CAKE INTERACTION
+============================= */
 let blown = false;
-cakeSvg.addEventListener('click', () => {
+
+cakeSvg.addEventListener("click", () => {
   if(blown) return;
   blown = true;
+
   extinguishCandles();
-  setTimeout(()=> {
-    popParty();
-    afterBlowBtn.classList.remove('hidden');
+
+  setTimeout(()=>{
+    startConfetti();
+    afterBlowBtn.classList.remove("hidden");
   }, 900);
 });
 
-afterBlowBtn.addEventListener('click', showNotesPage);
+afterBlowBtn.addEventListener("click", showNotesPage);
 
-/* Extinguish */
+
 function extinguishCandles(){
-  candlesGroup.classList.add('candle-extinguished');
-  const flames = document.querySelectorAll('.flame-core');
-  flames.forEach((f)=> f.animate(
-    [
-      {opacity:1, transform:'translateY(0) scale(1)'},
-      {opacity:0, transform:'translateY(-18px) scale(.2)'}
-    ],
-    {duration:800, easing:'ease-out', fill:'forwards'}
-  ));
+  candlesGroup.classList.add("candle-extinguished");
+
+  document.querySelectorAll(".flame-core").forEach(f=>{
+    f.animate(
+      [
+        { opacity:1, transform:"translateY(0) scale(1)" },
+        { opacity:0, transform:"translateY(-22px) scale(0.1)" }
+      ],
+      { duration:800, easing:"ease-out", fill:"forwards" }
+    );
+  });
 }
 
-/* Confetti */
+
+/* =============================
+          CONFETTI
+============================= */
 confettiCanvas.width = window.innerWidth;
 confettiCanvas.height = window.innerHeight;
-window.addEventListener('resize', ()=> {
+
+window.addEventListener("resize", ()=>{
   confettiCanvas.width = window.innerWidth;
   confettiCanvas.height = window.innerHeight;
 });
 
-let confettiParticles = [];
+let confetti = [];
+function rand(min,max){ return Math.random()*(max-min)+min; }
 
-function rand(min,max){return Math.random()*(max-min)+min}
-
-function initConfetti(){
-  confettiParticles = [];
-  const count = 140;
-  for(let i=0;i<count;i++){
-    confettiParticles.push({
+function startConfetti(){
+  confetti = [];
+  for(let i=0;i<140;i++){
+    confetti.push({
       x: rand(0, confettiCanvas.width),
       y: rand(-confettiCanvas.height, 0),
       size: rand(6,12),
-      speedY: rand(2,8),
+      speedY: rand(2,7),
       speedX: rand(-2,2),
-      rotation: rand(0,360),
-      rotSpeed: rand(-6,6),
-      color: `hsl(${Math.floor(rand(0,360))},70%,60%)`
+      color: `hsl(${Math.floor(rand(0,360))},80%,60%)`
     });
   }
+  requestAnimationFrame(updateConfetti);
 }
-
-let confettiAnim = null;
 
 function updateConfetti(){
-  confettiCtx.clearRect(0,0,confettiCanvas.width, confettiCanvas.height);
-  confettiParticles.forEach((p)=>{
+  confettiCtx.clearRect(0,0,confettiCanvas.width,confettiCanvas.height);
+
+  confetti.forEach(p=>{
     p.x += p.speedX;
     p.y += p.speedY;
-    p.rotation += p.rotSpeed;
 
-    confettiCtx.save();
-    confettiCtx.translate(p.x,p.y);
-    confettiCtx.rotate(p.rotation * Math.PI / 180);
     confettiCtx.fillStyle = p.color;
-    confettiCtx.fillRect(-p.size/2, -p.size/2, p.size, p.size*0.6);
-    confettiCtx.restore();
+    confettiCtx.fillRect(p.x,p.y,p.size,p.size*0.6);
   });
 
-  confettiParticles = confettiParticles.filter(p => p.y < confettiCanvas.height + 40);
+  confetti = confetti.filter(p=> p.y < confettiCanvas.height + 40);
 
-  if(confettiParticles.length === 0){
-    cancelAnimationFrame(confettiAnim);
-    confettiAnim = null;
-    return;
-  }
-
-  confettiAnim = requestAnimationFrame(updateConfetti);
+  if(confetti.length > 0) requestAnimationFrame(updateConfetti);
 }
 
-function startConfetti(){
-  initConfetti();
-  if(!confettiAnim) updateConfetti();
-}
 
-function popParty(){
-  startConfetti();
-  if(bdayAudio){
-    try { bdayAudio.play().catch(()=>{}); } catch(e){}
-  }
-}
-
-/* Notes page */
+/* =============================
+        NOTES PAGE
+============================= */
 function showNotesPage(){
   showPage(pageNotes);
-  notesArea.innerHTML = '';
-  NOTES.forEach((n,i)=>{
-    const div = document.createElement('div');
-    div.className = 'note';
-    div.style.transform = `rotate(${(Math.random()-0.5)*8}deg) translateY(${(Math.random()*6)}px)`;
-    const emoji = ["💖","🌟","🍰","📸","🎈"][i % 5];
-    div.innerHTML = `<h4>For you ${emoji}</h4><p>${n}</p>`;
+  notesArea.innerHTML = "";
+
+  NOTES.forEach((note,i)=>{
+    const div = document.createElement("div");
+    div.className = "note";
+
+    const emoji = ["💖","🌟","🍰","🎀","🎈"][i % 5];
+
+    div.innerHTML = `<h4>For you ${emoji}</h4><p>${note}</p>`;
     notesArea.appendChild(div);
   });
 }
 
-/* Gallery */
-function initGallery(){
-  if(!galleryEl) return;
-  galleryEl.innerHTML = '';
 
-  GALLERY_IMAGES.forEach(src=>{
-    const img = document.createElement('img');
-    img.src = src;
-    galleryEl.appendChild(img);
-  });
+/* =============================
+        FLASHBACK PAGE
+============================= */
+toFlashbackBtn.addEventListener("click", () => showPage(pageFlashback));
 
-  let idx = 0;
-  setInterval(()=>{
-    idx = (idx+1) % Math.max(1, GALLERY_IMAGES.length);
-    const imgs = galleryEl.querySelectorAll('img');
-    if(imgs[idx]) imgs[idx].scrollIntoView({behavior:'smooth', inline:'center'});
-  }, 2600);
-}
-initGallery();
+toCardBtn.addEventListener("click", () => showPage(pageCard));
 
-/* Navigation */
-toFlashbackBtn && toFlashbackBtn.addEventListener('click', ()=> showPage(pageFlashback));
-toCardBtn && toCardBtn.addEventListener('click', ()=> {
-  if(FINAL_MESSAGE_OVERRIDE.trim()) {
-    document.getElementById('finalMessage').textContent = FINAL_MESSAGE_OVERRIDE;
-  }
-  showPage(pageCard);
-});
-restartBtn && restartBtn.addEventListener('click', ()=> location.reload());
+restartBtn.addEventListener("click", () => location.reload());
 
-/* Tune */
-if(playTuneBtn){
-  playTuneBtn.addEventListener('click', ()=>{
-    if(bdayAudio){
-      bdayAudio.play().catch(()=>{ alert('Tap once to allow audio.'); });
-    }
-  });
-}
 
-/* =======================
-   MIC BLOW DETECTION
-   ======================= */
+/* =============================
+     MICROPHONE PERMISSION
+============================= */
 let audioStream = null;
 let audioContext = null;
 let analyser = null;
 let dataArray = null;
+let micReady = false;
 let micListening = false;
-let micTimeoutHandle = null;
+let micAnim = null;
 
-function startMicListening(){
-  if(micListening) return;
+function requestMicPermissionIfNeeded(){
+  if(micReady) return;
 
-  micListening = true;
-  micHint.style.display = 'block';
-  micBlowBtn.textContent = 'Listening... 🎧';
+  if(!navigator.mediaDevices) return;
 
   navigator.mediaDevices.getUserMedia({ audio:true })
-    .then(stream => {
+    .then(stream=>{
       audioStream = stream;
       audioContext = new (window.AudioContext || window.webkitAudioContext)();
-      const source = audioContext.createMediaStreamSource(stream);
+      const src = audioContext.createMediaStreamSource(stream);
       analyser = audioContext.createAnalyser();
-      analyser.fftSize = 2048;
-
+      analyser.fftSize = 1024;
       dataArray = new Float32Array(analyser.fftSize);
-      source.connect(analyser);
-
-      const startTime = performance.now();
-      let loudStart = null;
-
-      function analyze(){
-        analyser.getFloatTimeDomainData(dataArray);
-
-        let sum = 0;
-        for(let i=0;i<dataArray.length;i++){
-          sum += dataArray[i]*dataArray[i];
-        }
-        const rms = Math.sqrt(sum/dataArray.length);
-        const now = performance.now();
-
-        if(rms >= MIC_SETTINGS.threshold){
-          if(loudStart === null) loudStart = now;
-          if(now - loudStart >= MIC_SETTINGS.minBlowMs){
-            stopMicListening();
-            onMicBlowDetected();
-            return;
-          }
-        } else {
-          loudStart = null;
-        }
-
-        if(now - startTime > MIC_SETTINGS.maxListenMs){
-          stopMicListening();
-          onMicBlowTimeout();
-          return;
-        }
-
-        micTimeoutHandle = requestAnimationFrame(analyze);
-      }
-
-      micTimeoutHandle = requestAnimationFrame(analyze);
+      src.connect(analyser);
+      micReady = true;
     })
-    .catch(err => {
-      micListening = false;
-      micBlowBtn.textContent = 'Blow into mic 🌬️';
-      micHint.style.display = 'none';
-
-      if(err && err.name === "NotAllowedError"){
-        alert("Microphone permission denied.");
-      } else {
-        alert("Microphone error: " + err.message);
-      }
-    });
+    .catch(()=>{});
 }
 
-function stopMicListening(){
-  if(micTimeoutHandle){
-    cancelAnimationFrame(micTimeoutHandle);
-    micTimeoutHandle = null;
+
+function startAutoListeningOnCake(){
+  if(blown || !micReady || micListening) return;
+
+  micListening = true;
+  let firstLoud = null;
+  const startT = performance.now();
+
+  function analyze(){
+    if(!analyser || blown) return;
+
+    analyser.getFloatTimeDomainData(dataArray);
+
+    let sum = 0;
+    for(let i=0;i<dataArray.length;i++){
+      sum += dataArray[i]*dataArray[i];
+    }
+
+    const rms = Math.sqrt(sum / dataArray.length);
+    const now = performance.now();
+
+    if(rms >= MIC_SETTINGS.threshold){
+      if(firstLoud === null) firstLoud = now;
+
+      if(now - firstLoud >= MIC_SETTINGS.minBlowMs){
+        blown = true;
+        stopMic();
+        extinguishCandles();
+        setTimeout(()=>{ startConfetti(); afterBlowBtn.classList.remove("hidden"); }, 800);
+        return;
+      }
+    } else {
+      firstLoud = null;
+    }
+
+    if(now - startT >= MIC_SETTINGS.maxListenMs){
+      stopMic();
+      return;
+    }
+
+    micAnim = requestAnimationFrame(analyze);
   }
+
+  micAnim = requestAnimationFrame(analyze);
+}
+
+function stopMic(){
+  micListening = false;
+  if(micAnim) cancelAnimationFrame(micAnim);
   if(audioStream){
     audioStream.getTracks().forEach(t=>t.stop());
     audioStream = null;
   }
   if(audioContext){
-    try { audioContext.close(); } catch(e){}
+    audioContext.close();
     audioContext = null;
   }
-
-  micListening = false;
-  micBlowBtn.textContent = 'Blow into mic 🌬️';
-  micHint.style.display = 'none';
 }
 
-function onMicBlowDetected(){
-  if(!blown){
-    blown = true;
-    micBlowBtn.textContent = 'Blow detected! 🎉';
-    extinguishCandles();
-    setTimeout(()=>{
-      popParty();
-      afterBlowBtn.classList.remove('hidden');
-    },800);
+
+/* =============================
+        DRAGGABLE MEMORIES
+============================= */
+function enableDrag(){
+  const wrap = document.querySelector(".mem-wrap");
+  if(!wrap) return;
+
+  const imgs = [...document.querySelectorAll(".mem-img")];
+  const originals = new Map();
+
+  imgs.forEach(img=>{
+    originals.set(img,{
+      left: img.style.left,
+      top: img.style.top
+    });
+
+    img.addEventListener("pointerdown", startDrag);
+  });
+
+  function startDrag(e){
+    const img = e.target;
+    img.setPointerCapture(e.pointerId);
+
+    let startX = e.clientX;
+    let startY = e.clientY;
+
+    let rect = img.getBoundingClientRect();
+    let parent = wrap.getBoundingClientRect();
+
+    let leftPct = ((rect.left - parent.left + rect.width/2) / parent.width)*100;
+    let topPct  = ((rect.top  - parent.top  + rect.height/2) / parent.height)*100;
+
+    function move(ev){
+      let dx = ev.clientX - startX;
+      let dy = ev.clientY - startY;
+
+      let newLeft = leftPct + (dx / parent.width)*100;
+      let newTop  = topPct + (dy / parent.height)*100;
+
+      img.style.left = `${newLeft}%`;
+      img.style.top  = `${newTop}%`;
+    }
+    function stop(ev){
+      img.releasePointerCapture(ev.pointerId);
+      img.removeEventListener("pointermove", move);
+      img.removeEventListener("pointerup", stop);
+    }
+
+    img.addEventListener("pointermove", move);
+    img.addEventListener("pointerup", stop);
   }
 }
 
-function onMicBlowTimeout(){
-  micBlowBtn.textContent = 'Try again 🌬️';
-  setTimeout(()=>{ micBlowBtn.textContent = 'Blow into mic 🌬️'; },1500);
-}
+enableDrag();
 
-if(micBlowBtn){
-  micHint.style.display = 'none';
-  micBlowBtn.addEventListener('click', ()=>{
-    if(blown){
-      micBlowBtn.textContent = 'Already blown ✓';
-      return;
-    }
-    if(!navigator.mediaDevices){
-      alert("Microphone not supported.");
-      return;
-    }
-    startMicListening();
-  });
-}
+
+/* CLEANUP */
+window.addEventListener("beforeunload", stopMic);
