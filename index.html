@@ -8,6 +8,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700;900&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="css/styles.css" />
+  
 </head>
 
 <body>
@@ -180,27 +181,86 @@
     </section>
 
     <!-- FINAL CARD PAGE -->
-    <section class="page hidden" id="page-card">
-      <div class="center-card fade-in final-card">
-        <h2>Happy Birthday Bachhaa🎉🎈</h2>
+   <!-- FINAL CARD PAGE (REPLACE this whole block) -->
+<!-- FINAL CARD PAGE — ready to replace -->
+<section class="page hidden" id="page-card">
+  <div class="center-card fade-in final-card card-stage">
 
-        <div class="birthday-card">
-          <p id="finalMessage" class="final-message">
-            Hey lovely! 🌸 On your special day I wish you oceans of smiles, bucketloads of cake,
-            and all the wild, wonderful adventures you dream of. You light up rooms, make hearts
-            warmer, and I’m so grateful for you. Keep shining — today is all about YOU! ✨💗🎂
-          </p>
+    <div class="card-wrapper" aria-hidden="false">
+
+      <!-- envelope/back shadow -->
+      <div class="envelope-back"></div>
+
+      <!-- envelope (visual) -->
+      <div class="envelope">
+        <div class="envelope-flap"></div>
+        <div class="envelope-body">
+          <div class="ribbon">
+            <span class="ribbon-left"></span>
+            <span class="ribbon-center">Happy Birthday</span>
+            <span class="ribbon-right"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- greeting card (front) -->
+      <div class="greeting-card" tabindex="0" role="dialog" aria-labelledby="cardTitle" aria-describedby="cardMsg">
+        <div class="card-inner">
+          <h3 id="cardTitle" class="card-title">Happy Birthday 🎉</h3>
+
+          <!-- final message: using pre-wrap to preserve newlines and keep emojis -->
+          <div class="card-message" id="cardMsg">
+            <p class="final-message" style="white-space:pre-wrap;">
+Heyy bachhaa ❤️❤️… Happiest Birthday, ganduuu 🫶🫂🎉❤️…And here I am, back to the place where I don’t know what to write 🥹🙃…
+Soo… thank you for being there for me whenever I needed you 🥹❤️.Thank you for being the person who understands me 🫶🥹.
+Thank you for always calming me down 🙃.Thank you for irritating me 🥹🫶.Thank you for being the person who never judged me ❤️❤️.
+Thank you for keeping the bond we have—and had—for such a long time now 💕💕.Sorrryyyyy for not fulfilling your expectations 🥲🥲.
+Sorrryyyyy for hurting you 😞😞.Sorrryyyyy for not being there when you needed me 😅😅😅.
+Sorrryyyyy for being the worst person in your life 🙂🙂.But I promise I am going to value the bond we have, and I will always be there if you ever need me.
+I will be just a text or a call away.I might not message you from my side, but if you ever need me, don’t hesitate to tell me 🥹🥹🫶🫶.
+I miss listening to your bak-bak every day…I miss your “You know aaje su thayu”…I miss you irritating me because of your mood swings or just for fun…
+I miss our “GNSDTC, BBYEEEE 👊👋👊👋”…I miss the person who was my best friend 🥹🥹🫶🫶🫶…I hope we get back to how we were before ❤️🫶❤️💕🫂.
+Thank you for being the amazing person you are 💖💝💖.Hoping you will have a great future ❤️‍🩹💗💖💝…
+Happiest Birthday, mari ganduuu ❤️🫶🥹🫂😘🎊✨🎂.
+
+I know aa etlu saru nathi, but I tried…And also, I said ke ne ek evi gift aapis ke tara group ma thi koi nai aapi sake…
+So I hope you like it, betaa ❤️❤️🥹🥹🫂🫂
+
+Yours,
+Original Ganduuu 😂❤️🫶
+
+Achha btw sorryy aa code ma badha emojis sarkhi rite nathi dekhata so aa message tane alag thi mokli dais ❤️❤️
+            </p>
+          </div>
+
+          <div class="card-footer">
+            <button id="restartBtn" class="btn ghost small">Restart</button>
+          </div>
         </div>
 
-        <button id="restartBtn" class="btn ghost" style="margin-top:15px">Restart</button>
+        <div class="card-decor top-left"></div>
+        <div class="card-decor bottom-right"></div>
       </div>
-    </section>
+
+      <div class="card-confetti" aria-hidden="true">
+        <span class="c1"></span><span class="c2"></span><span class="c3"></span>
+        <span class="c4"></span><span class="c5"></span>
+      </div>
+    </div>
+
+    <p class="tiny" style="margin-top:14px;color:var(--muted)"></p>
+  </div>
+</section>
 
     <canvas id="confettiCanvas" class="confetti-canvas"></canvas>
 
   </main>
 
   <audio id="bdayAudio" src="assets/audio/bday.mp3" preload="auto" loop></audio>
+
+  <!-- add into <head> (before your main.js) -->
+<script src="https://twemoji.maxcdn.com/v/latest/twemoji.min.js" crossorigin="anonymous"></script>
+
   <script src="js/main.js"></script>
 
 </body>
