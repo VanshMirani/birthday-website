@@ -181,17 +181,19 @@
     </section>
 
     <!-- FINAL CARD PAGE -->
-   <!-- FINAL CARD PAGE (REPLACE this whole block) -->
-<!-- FINAL CARD PAGE — ready to replace -->
+<!-- FINAL CARD PAGE — page-turn + floaters -->
 <section class="page hidden" id="page-card">
   <div class="center-card fade-in final-card card-stage">
 
     <div class="card-wrapper" aria-hidden="false">
 
+      <!-- Floating hearts & balloons container (behind card) -->
+      <div class="floaters" aria-hidden="true"></div>
+
       <!-- envelope/back shadow -->
       <div class="envelope-back"></div>
 
-      <!-- envelope (visual) -->
+      <!-- envelope body -->
       <div class="envelope">
         <div class="envelope-flap"></div>
         <div class="envelope-body">
@@ -203,50 +205,77 @@
         </div>
       </div>
 
-      <!-- greeting card (front) -->
-      <div class="greeting-card" tabindex="0" role="dialog" aria-labelledby="cardTitle" aria-describedby="cardMsg">
-        <div class="card-inner">
-          <h3 id="cardTitle" class="card-title">Happy Birthday 🎉</h3>
+      <!-- GREETING CARD: made of two faces to animate page-turn -->
+      <div class="greeting-card" id="greetingCard" tabindex="0" role="dialog" aria-labelledby="cardTitle" aria-describedby="cardMsg">
+        <!-- front face (visible initially) -->
+        <div class="card-face card-front" aria-hidden="false">
+          <div class="card-inner">
+            <h3 id="cardTitle" class="card-title">Happy Birthday 🎉</h3>
+            <div class="card-preview">
+              <p class="preview-line">Tap to open your special message 💌</p>
+            </div>
+          </div>
+        </div>
 
-          <!-- final message: using pre-wrap to preserve newlines and keep emojis -->
-          <div class="card-message" id="cardMsg">
-            <p class="final-message" style="white-space:pre-wrap;">
-Heyy bachhaa ❤️❤️… Happiest Birthday, ganduuu 🫶🫂🎉❤️…And here I am, back to the place where I don’t know what to write 🥹🙃…Soo… thank you for being there for me whenever I needed you 🥹❤️.Thank you for being the person who understands me 🫶🥹.
-Thank you for always calming me down 🙃.Thank you for irritating me 🥹🫶.Thank you for being the person who never judged me ❤️❤️.Thank you for keeping the bond we have—and had—for such a long time now 💕💕.Sorrryyyyy for not fulfilling your expectations 🥲🥲.
-Sorrryyyyy for hurting you 😞😞.Sorrryyyyy for not being there when you needed me 😅😅😅.Sorrryyyyy for being the worst person in your life 🙂🙂.But I promise I am going to value the bond we have, and I will always be there if you ever need me.
-I will be just a text or a call away.I might not message you from my side, but if you ever need me, don’t hesitate to tell me 🥹🥹🫶🫶.I miss listening to your bak-bak every day…I miss your “You know aaje su thayu”…I miss you irritating me because of your mood swings or just for fun…
-I miss our “GNSDTC, BBYEEEE 👊👋👊👋”…I miss the person who was my best friend 🥹🥹🫶🫶🫶…I hope we get back to how we were before ❤️🫶❤️💕🫂.Thank you for being the amazing person you are 💖💝💖.Hoping you will have a great future ❤️‍🩹💗💖💝…
+        <!-- back/inner face (revealed when turned) -->
+        <div class="card-face card-back" aria-hidden="true">
+          <div class="card-inner">
+            <h3 class="card-title small">Happy Birthday 🎉</h3>
+
+            <div class="card-message" id="cardMsg">
+              <p class="final-message" style="white-space:pre-wrap;">
+Heyy bachhaa ❤️❤️… Happiest Birthday, ganduuu 🫶🫂🎉❤️…
+
+And here I am, back to the place where I don’t know what to write 🥹🙃…
+Soo… thank you for being there for me whenever I needed you 🥹❤️.
+Thank you for being the person who understands me 🫶🥹.
+Thank you for always calming me down 🙃.
+Thank you for irritating me 🥹🫶.
+Thank you for being the person who never judged me ❤️❤️.
+Thank you for keeping the bond we have—and had—for such a long time now 💕💕.
+Sorrryyyyy for not fulfilling your expectations 🥲🥲.
+Sorrryyyyy for hurting you 😞😞.
+Sorrryyyyy for not being there when you needed me 😅😅😅.
+Sorrryyyyy for being the worst person in your life 🙂🙂.
+But I promise I am going to value the bond we have, and I will always be there if you ever need me.
+I will be just a text or a call away.
+I might not message you from my side, but if you ever need me, don’t hesitate to tell me 🥹🥹🫶🫶.
+I miss listening to your bak-bak every day…
+I miss your “You know aaje su thayu”…
+I miss you irritating me because of your mood swings or just for fun…
+I miss our “GNSDTC, BBYEEEE 👊👋👊👋”…
+I miss the person who was my best friend 🥹🥹🫶🫶🫶…
+I hope we get back to how we were before ❤️🫶❤️💕🫂.
+Thank you for being the amazing person you are 💖💝💖.
+Hoping you will have a great future ❤️‍🩹💗💖💝…
 Happiest Birthday, mari ganduuu ❤️🫶🥹🫂😘🎊✨🎂.
-
-              
-I know aa etlu saru nathi, but I tried…And also, I said ke ne ek evi gift aapis ke tara group ma thi koi nai aapi sake…
+I know aa etlu saru nathi, but I tried…
+And also, I said ke ne ek evi gift aapis ke tara group ma thi koi nai aapi sake…
 So I hope you like it, betaa ❤️❤️🥹🥹🫂🫂
 
 Yours,
 Original Ganduuu 😂❤️🫶
 
 Achha btw sorryy aa code ma badha emojis sarkhi rite nathi dekhata so aa message tane alag thi mokli dais ❤️❤️
-            </p>
-          </div>
+              </p>
+            </div>
 
-          <div class="card-footer">
-            <button id="restartBtn" class="btn ghost small">Restart</button>
+            <div class="card-footer">
+              <button id="restartBtn" class="btn ghost small">Restart</button>
+            </div>
           </div>
         </div>
 
-        <div class="card-decor top-left"></div>
-        <div class="card-decor bottom-right"></div>
+        <!-- small page-turn hint -->
+        <div class="turn-hint">Tap card to open</div>
       </div>
 
-      <div class="card-confetti" aria-hidden="true">
-        <span class="c1"></span><span class="c2"></span><span class="c3"></span>
-        <span class="c4"></span><span class="c5"></span>
-      </div>
     </div>
 
-    <p class="tiny" style="margin-top:14px;color:var(--muted)"></p>
+    <p class="tiny" style="margin-top:14px;color:var(--muted)">Tap the card to open it. Use Restart to replay the surprise.</p>
   </div>
 </section>
+
 
     <canvas id="confettiCanvas" class="confetti-canvas"></canvas>
 
