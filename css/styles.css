@@ -1,6 +1,6 @@
 :root{
   --bg1: #ee2c80;
-  --bg2: #854a76;
+  --bg2: #fff3fc;
   --accent1: #ff6fa3;
   --accent2: #ffb3d9;
   --accent3: #7ee7c4;
@@ -252,17 +252,74 @@ body{
 .m8{ top:16%; left:18%; transform:translate(-50%,-50%); }
 
 /* FINAL CARD */
-.final-card{ margin-top:10px; }
-.birthday-card{
-  background:#fff;
-  padding:16px;
-  border-radius:16px;
-  box-shadow:var(--shadow-soft);
+/* final card message: preserve new lines and improve typography */
+.card-message {
+  background: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(255,255,255,0.99));
+  padding: 16px;
+  margin: 10px auto 0;
+  border-radius: 12px;
+  box-shadow: 0 10px 28px rgba(0,0,0,0.06);
+  color: #2b2b2b;
+  max-width: 86%;
+  text-align: left;
+  font-size: 1rem;
+  line-height: 1.48;
+  white-space: pre-wrap;       /* preserve user newlines */
+  word-break: break-word;      /* keep long lines from overflowing */
+  font-feature-settings: "liga" 1;
+  -webkit-font-smoothing: antialiased;
+  margin-bottom: 8px;
 }
-.final-message{
-  font-size:1rem;
-  line-height:1.5;
+
+/* make emojis slightly larger and aligned with text */
+.card-message .final-message {
+  font-size: 1rem;
+  line-height: 1.5;
 }
+
+/* responsive tweak for small screens */
+@media (max-width:640px){
+  .card-message { font-size: 0.95rem; max-width:92%; padding:12px; }
+  .card-wrapper { min-height:360px; }
+}
+
+/* confetti inside (tiny pulsing dots) */
+.card-confetti{
+  position:absolute;
+  width:100%;
+  height:100%;
+  left:0; top:0;
+  z-index:5;
+  pointer-events:none;
+}
+.card-confetti span{
+  display:block;
+  position:absolute;
+  width:10px; height:10px;
+  border-radius:50%;
+  opacity:0.95;
+  filter: blur(.6px);
+}
+.card-confetti .c1{ background:#ffb3d9; left:18%; top:28%; animation: conf1 2.6s infinite; }
+.card-confetti .c2{ background:#ffd87a; left:64%; top:36%; animation: conf2 3s infinite; }
+.card-confetti .c3{ background:#7ee7c4; left:38%; top:58%; animation: conf3 2.4s infinite; }
+.card-confetti .c4{ background:#ff6fa3; left:72%; top:64%; animation: conf4 2.9s infinite; }
+.card-confetti .c5{ background:#ffc3ea; left:50%; top:14%; animation: conf5 3.2s infinite; }
+
+@keyframes conf1{ 0% { transform:translateY(-6px) scale(0.9); } 50% { transform:translateY(8px) scale(1.05); } 100% { transform:translateY(-6px) scale(0.95); } }
+@keyframes conf2{ 0% { transform:translateY(0) scale(1); } 50% { transform:translateY(-10px) scale(1.04); } 100% { transform:translateY(0) scale(1); } }
+@keyframes conf3{ 0% { transform:translateY(-2px) scale(0.95); } 50% { transform:translateY(6px) scale(1.06); } 100% { transform:translateY(-2px) scale(0.95); } }
+@keyframes conf4{ 0% { transform:translateY(-8px) scale(0.9); } 50% { transform:translateY(8px) scale(1.08); } 100% { transform:translateY(-8px) scale(0.9); } }
+@keyframes conf5{ 0% { transform:translateY(-4px) scale(0.92); } 50% { transform:translateY(10px) scale(1.06); } 100% { transform:translateY(-4px) scale(0.92); } }
+
+/* small screen adjustments */
+@media (max-width:720px){
+  .card-wrapper{ min-height:380px; }
+  .greeting-card{ width:86%; height:auto; padding:16px; }
+  .card-message{ max-width:92%; font-size:0.98rem; }
+  .envelope{ height:300px; }
+}
+
 
 /* CONFETTI LAYER */
 .confetti-canvas{
