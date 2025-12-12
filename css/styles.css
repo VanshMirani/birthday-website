@@ -252,86 +252,9 @@ body{
 .m8{ top:16%; left:18%; transform:translate(-50%,-50%); }
 
 /* FINAL CARD */
-/* final card message: preserve new lines and improve typography */
-/* =========================
-   Mobile-friendly Final Card
-   Replace the previous final-card / card-wrapper / greeting-card / card-message block
-   ========================= */
+/* --- Fixed page-turn CSS: center pivot + stable flip --- */
 
-/* ---------------------------
-   Page-turn + Floating Hearts & Balloons
-   Append / replace final-card CSS
-   --------------------------- */
-
-/* floaters container behind the card */
-.floaters {
-  position: absolute;
-  left: 50%;
-  top: 18%;
-  transform: translateX(-50%);
-  width: 100%;
-  height: 70%;
-  pointer-events: none;
-  z-index: 4; /* behind card (card z-index is 15) */
-  overflow: visible;
-}
-
-/* floater base styles (hearts & balloons) */
-.floater {
-  position: absolute;
-  width: 36px;
-  height: 36px;
-  pointer-events: none;
-  opacity: 0.95;
-  transform-origin: center;
-  will-change: transform, opacity;
-}
-
-/* heart shape (uses emoji as background for crisp color) */
-.floater.heart {
-  font-size: 30px;
-  line-height: 36px;
-  text-align: center;
-  transform: translateY(0) scale(1);
-}
-
-/* balloon (circle + knot) */
-.floater.balloon {
-  width: 34px;
-  height: 44px;
-  border-radius: 50% 50% 50% 50%;
-  background: linear-gradient(180deg, #ffd1e8, #ff8ab5);
-  box-shadow: 0 8px 18px rgba(0,0,0,0.12);
-}
-.floater.balloon::after {
-  content: "";
-  position: absolute;
-  left: 50%;
-  bottom: -6px;
-  transform: translateX(-50%);
-  width: 6px;
-  height: 8px;
-  background: linear-gradient(180deg,#ff8ab5,#ff5f9e);
-  border-radius: 3px;
-}
-
-/* float up + sway animation */
-@keyframes floatUp {
-  0%   { transform: translateY(0) translateX(0) rotate(0deg) scale(0.98); opacity: 0; }
-  8%   { opacity: 1; }
-  50%  { transform: translateY(-42vh) translateX(8vw) rotate(8deg) scale(1.06); opacity: 0.9; }
-  100% { transform: translateY(-90vh) translateX(-6vw) rotate(14deg) scale(1.1); opacity: 0; }
-}
-@keyframes floatSway {
-  0% { transform: translateX(0) }
-  50% { transform: translateX(8px) }
-  100% { transform: translateX(0) }
-}
-
-/* small random sway for ballons */
-.floater.sway { animation: floatSway 3.2s ease-in-out infinite; }
-
-/* greeting-card with two faces for turning */
+/* container: 3D preserve */
 .greeting-card {
   width: 82%;
   max-width: 640px;
@@ -340,15 +263,15 @@ body{
   left: 50%;
   top: 50%;
   transform-style: preserve-3d;
-  transition: transform 900ms cubic-bezier(.2,.9,.2,1);
-  transform-origin: left center;
-  z-index: 15;
+  transition: transform 700ms cubic-bezier(.2,.9,.2,1);
+  transform-origin: center center;    /* CENTER pivot now */
+  z-index: 1500;                       /* large to stay above envelope */
   cursor: pointer;
   perspective: 1600px;
   display: block;
 }
 
-/* each face (front/back) */
+/* common face styles */
 .card-face {
   position: absolute;
   left: 0;
@@ -356,7 +279,8 @@ body{
   width: 100%;
   height: 100%;
   border-radius: 18px;
-  backface-visibility: hidden;
+  backface-visibility: hidden; /* ensure backface hidden */
+  -webkit-backface-visibility: hidden;
   overflow: hidden;
   display:flex;
   align-items:flex-start;
@@ -365,69 +289,59 @@ body{
   box-sizing:border-box;
 }
 
-/* front looks like card cover */
+/* front face (cover) */
 .card-front {
   background: linear-gradient(180deg,#fff,#fff4fb);
   box-shadow: 0 24px 60px rgba(0,0,0,0.18);
   transform: rotateY(0deg) translateZ(2px);
+  z-index: 2;
 }
 
-/* back is inner card content; initially rotated -180deg so hidden */
+/* back face (inner) - positioned flipped so it's hidden initially */
 .card-back {
   background: linear-gradient(180deg,#fffdf8,#fffaf7);
-  transform: rotateY(-180deg) translateZ(0);
-  box-shadow: inset 0 0 0 rgba(0,0,0,0.02);
-  overflow: hidden;
+  transform: rotateY(180deg) translateZ(0);
+  z-index: 1;
 }
 
-/* When turned, animate a page-turn: rotateY around left edge */
+/* TURNED: rotate the whole card around center by 180deg */
 .greeting-card.turned {
-  transform: translate(-50%,-50%) rotateY(-160deg) translateZ(0) scale(1.01); /* partial flip */
+  transform: translate(-50%,-50%) rotateY(180deg) scale(1.01);
 }
 
-/* small visual tweak while turning: front fades & back becomes visible */
-.greeting-card.turned .card-front { opacity: 0.02; transform: rotateY(-160deg) translateZ(0); transition: opacity 700ms ease; }
-.greeting-card.turned .card-back  { transform: rotateY(0deg) translateZ(2px); transition: transform 800ms cubic-bezier(.2,.9,.2,1); }
-
-/* card-preview (small text on front) */
-.card-preview { margin-top: 18px; }
-.preview-line { color:#333; font-weight:700; }
-
-/* turn hint */
-.turn-hint {
-  position:absolute;
-  bottom:8px;
-  left:50%;
-  transform:translateX(-50%);
-  font-size:0.86rem;
-  color:var(--muted);
-  z-index:20;
-  background: rgba(255,255,255,0.82);
-  padding:6px 10px;
-  border-radius:999px;
-  box-shadow:0 6px 18px rgba(0,0,0,0.06);
+/* when turned, front becomes backside (keep it low opacity so back is visible) */
+.greeting-card.turned .card-front {
+  opacity: 0.03;
+  transform: rotateY(180deg) translateZ(0);
+  transition: opacity 350ms ease;
 }
 
-/* ensure message scroll area remains inside back face */
+/* when turned, back rotates into place (face now readable) */
+.greeting-card.turned .card-back {
+  transform: rotateY(0deg) translateZ(2px);
+  transition: transform 700ms cubic-bezier(.2,.9,.2,1);
+  z-index: 3;
+}
+
+/* ensure card message area inside back remains scrollable and visible */
 .card-back .card-message {
-  height: calc(100% - 110px); /* leave space for title and footer */
-  overflow:auto;
+  height: calc(100% - 110px);
+  overflow: auto;
   -webkit-overflow-scrolling: touch;
 }
 
-/* slightly smaller title on back */
-.card-back .card-title.small { font-size:1.15rem; margin-bottom:8px; }
+/* keep preview/info on front visible and centered */
+.card-front .card-preview { margin-top: 18px; }
+.preview-line { color:#333; font-weight:700; }
 
-/* responsive adjustments (keeps bigger size + usable scroll) */
+/* flip hint */
+.turn-hint { z-index: 1600; }
+
+/* responsive adjustments (keep sizes same as before) */
 @media (max-width:720px) {
   .greeting-card { width: 90%; height: 340px; }
   .card-back .card-message { height: calc(100% - 120px); }
 }
-@media (max-width:420px) {
-  .greeting-card { width: 94%; height: 320px; }
-  .floaters { top: 12%; height: 68%; }
-}
-
 
 /* CONFETTI LAYER */
 .confetti-canvas{
