@@ -472,86 +472,94 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 })();
 
-/* ------------- Page-turn & floaters ------------- */
+/* ------------- Page-turn & floaters (fixed) ------------- */
 (function(){
-  // Page-turn toggle
+  // Page-turn toggle (center-based flip)
   const greetingCard = document.getElementById('greetingCard');
   if(greetingCard){
     greetingCard.addEventListener('click', toggleTurn);
     greetingCard.addEventListener('keydown', (e) => { if(e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleTurn(); } });
 
     function toggleTurn(){
-      greetingCard.classList.toggle('turned');
-      // set ARIA
-      const turned = greetingCard.classList.contains('turned');
-      greetingCard.querySelectorAll('.card-face').forEach((f,i) => {
-        f.setAttribute('aria-hidden', turned ? (i===0).toString() : (i===1).toString());
-      });
+      const turned = greetingCard.classList.toggle('turned');
+
+      // temporarily raise z-index strongly while turned to avoid overlap with envelope
+      if(turned){
+        greetingCard.style.zIndex = 9999;
+      } else {
+        // small delay to allow animation finish before lowering z-index
+        setTimeout(()=> greetingCard.style.zIndex = 1500, 520);
+      }
+
+      // set ARIA hidden appropriately: front is index 0, back index 1
+      const faces = greetingCard.querySelectorAll('.card-face');
+      if(faces.length >= 2){
+        faces[0].setAttribute('aria-hidden', turned ? 'true' : 'false');
+        faces[1].setAttribute('aria-hidden', turned ? 'false' : 'true');
+      }
     }
   }
 
-  // Floaters spawner
+  // Floaters spawner (unchanged general idea, slightly safer)
   const floatersRoot = document.querySelector('.floaters');
   if(!floatersRoot) return;
 
-  const floaterColors = [
-    { type: 'heart', text: '💖' },
-    { type: 'heart', text: '💗' },
-    { type: 'heart', text: '💘' },
+  const floaterTypes = [
+    { type: 'heart', char: '💖' },
+    { type: 'heart', char: '💗' },
+    { type: 'heart', char: '❤️' },
     { type: 'balloon', color: '#ffd1e8' },
     { type: 'balloon', color: '#ffd87a' },
     { type: 'balloon', color: '#7ee7c4' }
   ];
 
-  // create one initially for immediate effect
-  spawnFloater();
-  // spawn periodically
-  const FLOATER_INTERVAL = 1200; // ms
-  const floaterTimer = setInterval(spawnFloater, FLOATER_INTERVAL);
-
   function spawnFloater(){
-    const pick = floaterColors[Math.floor(Math.random()*floaterColors.length)];
+    const pick = floaterTypes[Math.floor(Math.random()*floaterTypes.length)];
     const el = document.createElement('div');
     el.className = 'floater ' + pick.type;
-    // random horizontal start position across container (0..90%)
-    const startLeft = (10 + Math.random()*80);
+    // set horizontal position within parent
+    const startLeft = (8 + Math.random()*84);
     el.style.left = startLeft + '%';
-    // random slight delay & duration for variance
-    const dur = 6 + Math.random()*6; // 6s - 12s
-    el.style.animation = `floatUp ${dur}s linear forwards`;
-    if(pick.type === 'heart'){
-      el.innerText = pick.text;
-      el.style.fontSize = (14 + Math.random()*14) + 'px';
-    } else {
-      // colored balloon
-      el.classList.add('sway');
-      el.style.background = `linear-gradient(180deg, ${pick.color}, ${shadeColor(pick.color, -18)})`;
-    }
-    // small initial transform for pop
-    el.style.opacity = '0';
-    floatersRoot.appendChild(el);
 
-    // remove after animation ends (allow extra time)
-    setTimeout(()=> { el.remove(); }, (dur*1000) + 1200);
+    const dur = 7 + Math.random()*6; // 7-13s
+    el.style.animation = `floatUp ${dur}s linear forwards`;
+
+    if(pick.type === 'heart'){
+      el.textContent = pick.char;
+      el.style.fontSize = (16 + Math.random()*18) + 'px';
+      el.style.lineHeight = '36px';
+    } else {
+      el.classList.add('sway');
+      const base = pick.color || '#ffd1e8';
+      el.style.background = `linear-gradient(180deg, ${base}, ${shadeColor(base, -20)})`;
+    }
+
+    floatersRoot.appendChild(el);
+    // cleanup
+    setTimeout(()=> { try{ el.remove(); }catch(e){} }, (dur*1000)+1200);
   }
 
-  // small helper to darken color for balloon base
-  function shadeColor(hex, percent) {
-    // hex like #ffd1e8 - convert
+  // initial few floaters for immediate feel
+  spawnFloater();
+  setTimeout(spawnFloater, 400);
+  const FLOATER_INTERVAL = 1200;
+  const floaterTimer = setInterval(spawnFloater, FLOATER_INTERVAL);
+
+  // helper to darken color
+  function shadeColor(hex, change) {
     const c = hex.replace('#','');
     const num = parseInt(c,16);
-    const r = Math.max(0, Math.min(255, (num >> 16) + percent));
-    const g = Math.max(0, Math.min(255, ((num >> 8) & 0x00FF) + percent));
-    const b = Math.max(0, Math.min(255, (num & 0x0000FF) + percent));
+    const r = Math.max(0, Math.min(255, (num >> 16) + change));
+    const g = Math.max(0, Math.min(255, ((num >> 8) & 0x00FF) + change));
+    const b = Math.max(0, Math.min(255, (num & 0x0000FF) + change));
     return '#' + ( (1<<24) + (r<<16) + (g<<8) + b ).toString(16).slice(1);
   }
 
-  // cleanup on unload
+  // cleanup on page unload
   window.addEventListener('beforeunload', ()=> {
     clearInterval(floaterTimer);
   });
 })();
-
 
 /* CLEANUP */
 window.addEventListener("beforeunload", stopMic);
