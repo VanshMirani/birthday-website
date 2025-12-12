@@ -472,6 +472,87 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 })();
 
+/* ------------- Page-turn & floaters ------------- */
+(function(){
+  // Page-turn toggle
+  const greetingCard = document.getElementById('greetingCard');
+  if(greetingCard){
+    greetingCard.addEventListener('click', toggleTurn);
+    greetingCard.addEventListener('keydown', (e) => { if(e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleTurn(); } });
+
+    function toggleTurn(){
+      greetingCard.classList.toggle('turned');
+      // set ARIA
+      const turned = greetingCard.classList.contains('turned');
+      greetingCard.querySelectorAll('.card-face').forEach((f,i) => {
+        f.setAttribute('aria-hidden', turned ? (i===0).toString() : (i===1).toString());
+      });
+    }
+  }
+
+  // Floaters spawner
+  const floatersRoot = document.querySelector('.floaters');
+  if(!floatersRoot) return;
+
+  const floaterColors = [
+    { type: 'heart', text: '💖' },
+    { type: 'heart', text: '💗' },
+    { type: 'heart', text: '💘' },
+    { type: 'balloon', color: '#ffd1e8' },
+    { type: 'balloon', color: '#ffd87a' },
+    { type: 'balloon', color: '#7ee7c4' }
+  ];
+
+  // create one initially for immediate effect
+  spawnFloater();
+  // spawn periodically
+  const FLOATER_INTERVAL = 1200; // ms
+  const floaterTimer = setInterval(spawnFloater, FLOATER_INTERVAL);
+
+  function spawnFloater(){
+    const pick = floaterColors[Math.floor(Math.random()*floaterColors.length)];
+    const el = document.createElement('div');
+    el.className = 'floater ' + pick.type;
+    // random horizontal start position across container (0..90%)
+    const startLeft = (10 + Math.random()*80);
+    el.style.left = startLeft + '%';
+    // random slight delay & duration for variance
+    const dur = 6 + Math.random()*6; // 6s - 12s
+    el.style.animation = `floatUp ${dur}s linear forwards`;
+    if(pick.type === 'heart'){
+      el.innerText = pick.text;
+      el.style.fontSize = (14 + Math.random()*14) + 'px';
+    } else {
+      // colored balloon
+      el.classList.add('sway');
+      el.style.background = `linear-gradient(180deg, ${pick.color}, ${shadeColor(pick.color, -18)})`;
+    }
+    // small initial transform for pop
+    el.style.opacity = '0';
+    floatersRoot.appendChild(el);
+
+    // remove after animation ends (allow extra time)
+    setTimeout(()=> { el.remove(); }, (dur*1000) + 1200);
+  }
+
+  // small helper to darken color for balloon base
+  function shadeColor(hex, percent) {
+    // hex like #ffd1e8 - convert
+    const c = hex.replace('#','');
+    const num = parseInt(c,16);
+    const r = Math.max(0, Math.min(255, (num >> 16) + percent));
+    const g = Math.max(0, Math.min(255, ((num >> 8) & 0x00FF) + percent));
+    const b = Math.max(0, Math.min(255, (num & 0x0000FF) + percent));
+    return '#' + ( (1<<24) + (r<<16) + (g<<8) + b ).toString(16).slice(1);
+  }
+
+  // cleanup on unload
+  window.addEventListener('beforeunload', ()=> {
+    clearInterval(floaterTimer);
+  });
+})();
+
 
 /* CLEANUP */
 window.addEventListener("beforeunload", stopMic);
+
