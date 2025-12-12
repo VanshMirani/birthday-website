@@ -6,9 +6,7 @@
   <title>✧ Happy Birthday ✧</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700;900&display=swap" rel="stylesheet">
-
   <link rel="stylesheet" href="css/styles.css" />
-  
 </head>
 
 <body>
@@ -69,7 +67,6 @@
               <ellipse cx="300" cy="150" rx="120" ry="28" fill="url(#cakeTopGrad3)" />
               <rect x="180" y="70" width="240" height="90" rx="40" fill="url(#cakeSideGrad3)" />
             </g>
-
 
             <defs>
               <linearGradient id="cakeSideGrad" x1="0" x2="0" y1="0" y2="1">
@@ -180,50 +177,33 @@
       </div>
     </section>
 
-    <!-- FINAL CARD PAGE -->
-<!-- FINAL CARD PAGE — page-turn + floaters -->
-<section class="page hidden" id="page-card">
-  <div class="center-card fade-in final-card card-stage">
+    <!-- FINAL CARD PAGE (NO FLIP) -->
+    <section class="page hidden" id="page-card">
+      <div class="center-card fade-in final-card card-stage">
 
-    <div class="card-wrapper" aria-hidden="false">
+        <div class="card-wrapper">
+          <div class="floaters" aria-hidden="true"></div>
 
-      <!-- Floating hearts & balloons container (behind card) -->
-      <div class="floaters" aria-hidden="true"></div>
-
-      <!-- envelope/back shadow -->
-      <div class="envelope-back"></div>
-
-      <!-- envelope body -->
-      <div class="envelope">
-        <div class="envelope-flap"></div>
-        <div class="envelope-body">
-          <div class="ribbon">
-            <span class="ribbon-left"></span>
-            <span class="ribbon-center">Happy Birthday</span>
-            <span class="ribbon-right"></span>
-          </div>
-        </div>
-      </div>
-
-      <!-- GREETING CARD: made of two faces to animate page-turn -->
-      <div class="greeting-card" id="greetingCard" tabindex="0" role="dialog" aria-labelledby="cardTitle" aria-describedby="cardMsg">
-        <!-- front face (visible initially) -->
-        <div class="card-face card-front" aria-hidden="false">
-          <div class="card-inner">
-            <h3 id="cardTitle" class="card-title">Happy Birthday 🎉</h3>
-            <div class="card-preview">
-              <p class="preview-line">Tap to open your special message 💌</p>
+          <!-- Envelope visual (purely decorative) -->
+          <div class="envelope-back"></div>
+          <div class="envelope">
+            <div class="envelope-flap"></div>
+            <div class="envelope-body">
+              <div class="ribbon">
+                <span class="ribbon-left"></span>
+                <span class="ribbon-center">Happy Birthday</span>
+                <span class="ribbon-right"></span>
+              </div>
             </div>
           </div>
-        </div>
 
-        <!-- back/inner face (revealed when turned) -->
-        <div class="card-face card-back" aria-hidden="true">
-          <div class="card-inner">
-            <h3 class="card-title small">Happy Birthday 🎉</h3>
+          <!-- STATIC GREETING CARD (no flipping) -->
+          <div class="greeting-card" id="greetingCardStatic" role="dialog" aria-labelledby="cardTitle" aria-describedby="cardMsg">
+            <div class="card-inner static-card-inner">
+              <h3 id="cardTitle" class="card-title">Happy Birthday 🎉</h3>
 
-            <div class="card-message" id="cardMsg">
-              <p class="final-message" style="white-space:pre-wrap;">
+              <div class="card-message" id="cardMsg">
+                <p class="final-message" style="white-space:pre-wrap;">
 Heyy bachhaa ❤️❤️… Happiest Birthday, ganduuu 🫶🫂🎉❤️…
 
 And here I am, back to the place where I don’t know what to write 🥹🙃…
@@ -257,25 +237,21 @@ Yours,
 Original Ganduuu 😂❤️🫶
 
 Achha btw sorryy aa code ma badha emojis sarkhi rite nathi dekhata so aa message tane alag thi mokli dais ❤️❤️
-              </p>
-            </div>
+                </p>
+              </div>
 
-            <div class="card-footer">
-              <button id="restartBtn" class="btn ghost small">Restart</button>
+              <div class="card-footer" style="margin-top:12px">
+                <button id="restartBtn" class="btn ghost small">Restart</button>
+              </div>
             </div>
           </div>
+
         </div>
 
-        <!-- small page-turn hint -->
-        <div class="turn-hint">Tap card to open</div>
+        <p class="tiny" style="margin-top:14px;color:var(--muted)">Open the card — the message is scrollable. Use Restart to replay the surprise.</p>
+
       </div>
-
-    </div>
-
-    <p class="tiny" style="margin-top:14px;color:var(--muted)">Tap the card to open it. Use Restart to replay the surprise.</p>
-  </div>
-</section>
-
+    </section>
 
     <canvas id="confettiCanvas" class="confetti-canvas"></canvas>
 
@@ -283,10 +259,9 @@ Achha btw sorryy aa code ma badha emojis sarkhi rite nathi dekhata so aa message
 
   <audio id="bdayAudio" src="assets/audio/bday.mp3" preload="auto" loop></audio>
 
-  <!-- add into <head> (before your main.js) -->
-<script src="https://twemoji.maxcdn.com/v/latest/twemoji.min.js" crossorigin="anonymous"></script>
+  <!-- twemoji for nicer emoji rendering (optional) -->
+  <script src="https://twemoji.maxcdn.com/v/latest/twemoji.min.js" crossorigin="anonymous"></script>
 
   <script src="js/main.js"></script>
-
 </body>
 </html>
