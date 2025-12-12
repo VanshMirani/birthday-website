@@ -38,15 +38,15 @@ body{
 
 /* CARD */
 .center-card{
-  background:rgba(255,255,255,0.92);
+  background:rgba(255,255,255,0.95);
   padding:26px;
   border-radius:var(--radius);
   width:100%;
-  max-width:900px;
+  max-width:920px;
   text-align:center;
   box-shadow:var(--shadow-strong);
   position:relative;
-  overflow:hidden;
+  overflow:visible;
 }
 
 /* Beautiful floating background glow */
@@ -110,6 +110,7 @@ body{
 .btn:active{ transform:translateY(2px) scale(.96); }
 .btn.big{ padding:16px 28px; font-size:1.05rem; }
 .btn.small{ padding:8px 12px; }
+.btn.ghost{ background:transparent; color:#333; border:1px solid rgba(0,0,0,0.06); box-shadow:none; }
 
 /* COUNTDOWN */
 .countdown{
@@ -121,7 +122,7 @@ body{
 .countdown div{
   background:#fff;
   padding:14px;
-  width:82px;
+  width:92px;
   border-radius:14px;
   box-shadow:var(--shadow-soft);
 }
@@ -129,13 +130,8 @@ body{
   font-size:1.6rem;
   font-weight:900;
 }
+.smooth-count span{ transition: all .25s ease; }
 
-/* Smooth number change */
-.smooth-count span{
-  transition: all .25s ease;
-}
-
-/* 3–2–1 Transition */
 .big-count{
   font-size:92px;
   font-weight:900;
@@ -144,78 +140,34 @@ body{
   color:transparent;
   transition: all 0.45s ease-out;
 }
+.fade-scale{ animation:fadeScale 0.9s ease-out; }
+@keyframes fadeScale{ from{ opacity:0; transform:scale(0.7); } to{ opacity:1; transform:scale(1); } }
 
-/* Fade scale for countdown */
-.fade-scale{
-  animation:fadeScale 0.9s ease-out;
-}
-@keyframes fadeScale{
-  from{ opacity:0; transform:scale(0.7); }
-  to{ opacity:1; transform:scale(1); }
-}
-
-/* ==== 3D CAKE STYLE ==== */
-.cake-3d-wrap{
-  width:100%;
-  display:flex;
-  justify-content:center;
-  margin-top:20px;
-}
-.cake-3d-svg{
-  max-width:360px;
-  filter: drop-shadow(0 16px 30px rgba(0,0,0,0.15));
-}
-
-/* Candles */
-.flame-core{
-  animation:flicker 1.2s infinite ease-in-out;
-  transform-origin:center;
-}
-@keyframes flicker{
-  0%{ transform:translateY(0) scale(1); opacity:1; }
-  50%{ transform:translateY(-3px) scale(1.08); opacity:0.92; }
-  100%{ transform:translateY(0) scale(1); opacity:1; }
-}
-
-/* Extinguish */
-.candle-extinguished .flame-core{
-  opacity:0;
-  transform:translateY(-20px) scale(0.2);
-  transition:all 0.6s ease-out;
-}
+/* CAKE */
+.cake-3d-wrap{ width:100%; display:flex; justify-content:center; margin-top:20px; }
+.cake-3d-svg{ max-width:360px; filter: drop-shadow(0 16px 30px rgba(0,0,0,0.15)); }
+.flame-core{ animation:flicker 1.2s infinite ease-in-out; transform-origin:center; }
+@keyframes flicker{ 0%{ transform:translateY(0) scale(1); opacity:1 } 50%{ transform:translateY(-3px) scale(1.08); opacity:0.92 } 100%{ transform:translateY(0) scale(1); opacity:1 } }
+.candle-extinguished .flame-core{ opacity:0; transform:translateY(-20px) scale(0.2); transition:all 0.6s ease-out; }
 
 /* NOTES */
-.notes-area{
-  margin-top:20px;
-  padding:10px;
-  display:flex;
-  flex-wrap:wrap;
-  gap:14px;
-  justify-content:center;
-}
-.note{
-  width:190px;
-  height:150px;
-  padding:12px;
-  border-radius:14px;
-  background:linear-gradient(180deg,#fff,#fff8fd);
-  box-shadow:var(--shadow-soft);
-}
+.notes-area{ margin-top:20px; padding:10px; display:flex; flex-wrap:wrap; gap:14px; justify-content:center; }
+.note{ width:190px; height:150px; padding:12px; border-radius:14px; background:linear-gradient(180deg,#fff,#fff8fd); box-shadow:var(--shadow-soft); }
 .note h4{ font-size:1rem; font-weight:700; }
 .note p{ margin-top:6px; font-size:0.9rem; }
 
-/* ==== FLASHBACK PAGE ==== */
+/* FLASHBACK */
 .mem-wrap{
   position:relative;
   width:100%;
   max-width:760px;
-  height:560px;   /* Increased spacing so images do not overlap */
+  height:560px;
   margin:24px auto;
 }
 .mem-img{
   position:absolute;
-  width:110px;
-  height:110px;
+  width:120px;
+  height:120px;
   border-radius:50%;
   object-fit:cover;
   border:6px solid white;
@@ -230,117 +182,67 @@ body{
   top:50%;
   left:50%;
   transform:translate(-50%,-50%);
-  width:360px;
+  width:420px;
   padding:8px;
   border-radius:16px;
   background:#fff;
   box-shadow:var(--shadow-strong);
 }
-.video-center video{
-  width:100%;
-  border-radius:12px;
-}
+.video-center video{ width:100%; border-radius:12px; }
 
-/* Circular placement */
+/* Circular placement (bigger, spaced) */
 .m1{ top:2%; left:50%; transform:translateX(-50%); }
-.m2{ top:16%; left:82%; transform:translate(-50%,-50%); }
+.m2{ top:18%; left:82%; transform:translate(-50%,-50%); }
 .m3{ top:46%; left:92%; transform:translate(-50%,-50%); }
 .m4{ top:78%; left:82%; transform:translate(-50%,-50%); }
 .m5{ top:90%; left:50%; transform:translate(-50%,-50%); }
 .m6{ top:78%; left:18%; transform:translate(-50%,-50%); }
 .m7{ top:46%; left:8%; transform:translate(-50%,-50%); }
-.m8{ top:16%; left:18%; transform:translate(-50%,-50%); }
+.m8{ top:18%; left:18%; transform:translate(-50%,-50%); }
 
-/* FINAL CARD */
-/* --- Fixed page-turn CSS: center pivot + stable flip --- */
-
-/* container: 3D preserve */
-.greeting-card {
-  width: 82%;
-  max-width: 640px;
-  height: 360px;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform-style: preserve-3d;
-  transition: transform 700ms cubic-bezier(.2,.9,.2,1);
-  transform-origin: center center;    /* CENTER pivot now */
-  z-index: 1500;                       /* large to stay above envelope */
-  cursor: pointer;
-  perspective: 1600px;
-  display: block;
-}
-
-/* common face styles */
-.card-face {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  border-radius: 18px;
-  backface-visibility: hidden; /* ensure backface hidden */
-  -webkit-backface-visibility: hidden;
-  overflow: hidden;
+/* FINAL CARD (static) */
+.card-wrapper{
+  position:relative;
+  width:100%;
   display:flex;
-  align-items:flex-start;
   justify-content:center;
-  padding:18px;
-  box-sizing:border-box;
+  margin-top:20px;
 }
-
-/* front face (cover) */
-.card-front {
-  background: linear-gradient(180deg,#fff,#fff4fb);
-  box-shadow: 0 24px 60px rgba(0,0,0,0.18);
-  transform: rotateY(0deg) translateZ(2px);
-  z-index: 2;
-}
-
-/* back face (inner) - positioned flipped so it's hidden initially */
-.card-back {
-  background: linear-gradient(180deg,#fffdf8,#fffaf7);
-  transform: rotateY(180deg) translateZ(0);
-  z-index: 1;
-}
-
-/* TURNED: rotate the whole card around center by 180deg */
-.greeting-card.turned {
-  transform: translate(-50%,-50%) rotateY(180deg) scale(1.01);
-}
-
-/* when turned, front becomes backside (keep it low opacity so back is visible) */
-.greeting-card.turned .card-front {
-  opacity: 0.03;
-  transform: rotateY(180deg) translateZ(0);
-  transition: opacity 350ms ease;
-}
-
-/* when turned, back rotates into place (face now readable) */
-.greeting-card.turned .card-back {
-  transform: rotateY(0deg) translateZ(2px);
-  transition: transform 700ms cubic-bezier(.2,.9,.2,1);
-  z-index: 3;
-}
-
-/* ensure card message area inside back remains scrollable and visible */
-.card-back .card-message {
-  height: calc(100% - 110px);
-  overflow: auto;
+.greeting-card{
+  width:88%;
+  max-width:720px;
+  background: linear-gradient(180deg,#fff,#fff8fb);
+  border-radius:18px;
+  padding:22px;
+  box-shadow:0 28px 80px rgba(0,0,0,0.12);
+  max-height:72vh;              /* fits mobile */
+  overflow-y:auto;
   -webkit-overflow-scrolling: touch;
 }
+.static-card-inner{ display:flex; flex-direction:column; gap:12px; align-items:flex-start; }
+.card-title{ font-size:1.6rem; font-weight:800; margin:0 auto 6px; text-align:center; }
+.card-message{ width:100%; }
 
-/* keep preview/info on front visible and centered */
-.card-front .card-preview { margin-top: 18px; }
-.preview-line { color:#333; font-weight:700; }
+/* decorative envelope/ribbon behind card */
+.envelope-back{ position:absolute; left:50%; top:12%; transform:translateX(-50%); width:96%; height:120px; border-radius:12px; background:linear-gradient(90deg, rgba(255,111,163,0.06), rgba(126,231,196,0.04)); z-index:0; }
+.envelope{ position:absolute; left:50%; top:24%; transform:translateX(-50%); width:92%; height:80px; z-index:1; pointer-events:none; }
+.envelope-body{ background:linear-gradient(180deg,#fff,#fff6f6); border-radius:12px; height:100%; box-shadow:0 12px 36px rgba(0,0,0,0.08); display:flex; align-items:center; justify-content:center; }
+.ribbon{ position:absolute; top:-18px; left:50%; transform:translateX(-50%); display:flex; align-items:center; gap:8px; }
 
-/* flip hint */
-.turn-hint { z-index: 1600; }
+/* ribbon center */
+.ribbon-center{ background:linear-gradient(90deg,var(--accent1),var(--accent2)); color:white; padding:6px 12px; border-radius:12px; font-weight:800; box-shadow:0 8px 20px rgba(255,111,163,0.12); }
 
-/* responsive adjustments (keep sizes same as before) */
-@media (max-width:720px) {
-  .greeting-card { width: 90%; height: 340px; }
-  .card-back .card-message { height: calc(100% - 120px); }
+/* FLOATERS (hearts & balloons) */
+.floaters{ position:absolute; inset:0; pointer-events:none; z-index:0; overflow:hidden; }
+.floater{ position:absolute; bottom:-8%; display:block; transform:translateY(0); opacity:0.98; }
+.floater.heart{ font-size:20px; }
+.floater.balloon{ width:26px; height:36px; border-radius:14px; box-shadow:0 6px 18px rgba(0,0,0,0.08); }
+
+/* float animation */
+@keyframes floatUp {
+  0% { transform: translateY(0) scale(1); opacity:0.95; }
+  20% { opacity:1; }
+  100% { transform: translateY(-130vh) scale(1.05); opacity:0.0; }
 }
 
 /* CONFETTI LAYER */
@@ -352,19 +254,19 @@ body{
   z-index:2000;
 }
 
-/* GENERAL PAGE FADE TRANSITION */
-.fade-in-page{
-  animation:fadeInPage .65s ease-out;
-}
-@keyframes fadeInPage{
-  0%{ opacity:0; transform:translateY(20px) scale(.97); }
-  100%{ opacity:1; transform:translateY(0) scale(1); }
-}
+/* page fade */
+.fade-in-page{ animation:fadeInPage .65s ease-out; }
+@keyframes fadeInPage{ 0%{ opacity:0; transform:translateY(18px) scale(.98);} 100%{ opacity:1; transform:translateY(0) scale(1);} }
 
 /* small responsive tweaks */
+@media(max-width:900px){
+  .video-center{ width:340px; }
+  .mem-wrap{ height:520px; }
+}
 @media(max-width:600px){
-  .cake-3d-svg{ max-width:280px; }
-  .mem-wrap{ height:480px; }
   .video-center{ width:260px; }
-  .mem-img{ width:85px; height:85px; }
+  .mem-wrap{ height:480px; }
+  .mem-img{ width:86px; height:86px; }
+  .greeting-card{ padding:16px; max-height:78vh; }
+  .card-title{ font-size:1.25rem; }
 }
