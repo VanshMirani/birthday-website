@@ -253,73 +253,190 @@ body{
 
 /* FINAL CARD */
 /* final card message: preserve new lines and improve typography */
-.card-message {
-  background: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(255,255,255,0.99));
-  padding: 16px;
-  margin: 10px auto 0;
-  border-radius: 12px;
-  box-shadow: 0 10px 28px rgba(0,0,0,0.06);
-  color: #2b2b2b;
-  max-width: 86%;
-  text-align: left;
-  font-size: 1rem;
-  line-height: 1.48;
-  white-space: pre-wrap;       /* preserve user newlines */
-  word-break: break-word;      /* keep long lines from overflowing */
-  font-feature-settings: "liga" 1;
-  -webkit-font-smoothing: antialiased;
-  margin-bottom: 8px;
+/* =========================
+   Mobile-friendly Final Card
+   Replace the previous final-card / card-wrapper / greeting-card / card-message block
+   ========================= */
+
+.card-stage { overflow: visible; }
+
+/* wrapper: reduce height on mobile and center nicely */
+.card-wrapper{
+  position:relative;
+  width:100%;
+  max-width:760px;
+  margin: 8px auto 18px;
+  min-height: 340px;        /* smaller so content sits higher on mobile */
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  perspective:1200px;
+  padding: 8px;
 }
 
-/* make emojis slightly larger and aligned with text */
-.card-message .final-message {
-  font-size: 1rem;
-  line-height: 1.5;
-}
-
-/* responsive tweak for small screens */
-@media (max-width:640px){
-  .card-message { font-size: 0.95rem; max-width:92%; padding:12px; }
-  .card-wrapper { min-height:360px; }
-}
-
-/* confetti inside (tiny pulsing dots) */
-.card-confetti{
+/* envelope/back shadow */
+.envelope-back{
   position:absolute;
+  width:86%;
+  height:300px;
+  background: linear-gradient(180deg, rgba(0,0,0,0.06), rgba(0,0,0,0.03));
+  border-radius:18px;
+  bottom:8px;
+  filter: blur(8px);
+  z-index:6;
+}
+
+/* envelope body: slightly reduced height to avoid huge empty top area */
+.envelope{
+  position:relative;
+  width:86%;
+  max-width:640px;
+  height:300px;
+  border-radius:18px;
+  background: linear-gradient(180deg,#fff5fb,#fff9f6);
+  box-shadow: 0 22px 48px rgba(0,0,0,0.12);
+  border:1px solid rgba(0,0,0,0.04);
+  z-index:8;
+  overflow:visible;
+}
+
+/* envelope flap: visually smaller */
+.envelope-flap{
+  position:absolute;
+  top:0;
+  left:0;
+  right:0;
+  height:48%;
+  background: linear-gradient(180deg,#ffeef9,#ffdef2);
+  border-top-left-radius:18px;
+  border-top-right-radius:18px;
+  transform-origin: top center;
+  transform: translateY(0) rotateX(0deg);
+  transition: transform 520ms cubic-bezier(.2,.9,.25,1);
+  z-index:12;
+  box-shadow: inset 0 -6px 14px rgba(255,111,163,0.06);
+}
+
+/* ribbon position adjusted for smaller envelope */
+.ribbon{
+  position:absolute;
+  left:50%;
+  transform:translateX(-50%);
+  top:44%;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  z-index:13;
+}
+.ribbon-center{
+  padding:6px 14px;
+  font-size:0.88rem;
+}
+
+/* greeting-card sits above envelope; make it smaller on mobile and scrollable */
+.greeting-card{
+  position:absolute;
+  width:78%;
+  max-width:600px;
+  height:300px;
+  left:50%;
+  top:50%;
+  transform: translate(-50%,-50%) translateZ(36px) rotateX(0deg);
+  background: linear-gradient(180deg,#fff,#fffaf8);
+  border-radius:14px;
+  box-shadow: 0 28px 60px rgba(0,0,0,0.18);
+  z-index:15;
+  border:1px solid rgba(0,0,0,0.03);
+  transition: transform 520ms cubic-bezier(.2,.9,.25,1), box-shadow 360ms;
+  cursor:default;
+  display:flex;
+  align-items:flex-start;
+  justify-content:center;
+  padding:16px;
+  transform-origin: top center;
+  overflow: hidden;
+}
+
+/* if user focuses or hovers, mild tilt (keeps card interactive but not huge) */
+.greeting-card:focus,
+.greeting-card:hover {
+  transform: translate(-50%,-50%) translateZ(42px) rotateX(-4deg) scale(1.005);
+  box-shadow: 0 36px 90px rgba(0,0,0,0.22);
+  outline: none;
+}
+
+/* inner content container works as scroll viewport */
+.card-inner {
   width:100%;
   height:100%;
-  left:0; top:0;
-  z-index:5;
-  pointer-events:none;
-}
-.card-confetti span{
-  display:block;
-  position:absolute;
-  width:10px; height:10px;
-  border-radius:50%;
-  opacity:0.95;
-  filter: blur(.6px);
-}
-.card-confetti .c1{ background:#ffb3d9; left:18%; top:28%; animation: conf1 2.6s infinite; }
-.card-confetti .c2{ background:#ffd87a; left:64%; top:36%; animation: conf2 3s infinite; }
-.card-confetti .c3{ background:#7ee7c4; left:38%; top:58%; animation: conf3 2.4s infinite; }
-.card-confetti .c4{ background:#ff6fa3; left:72%; top:64%; animation: conf4 2.9s infinite; }
-.card-confetti .c5{ background:#ffc3ea; left:50%; top:14%; animation: conf5 3.2s infinite; }
-
-@keyframes conf1{ 0% { transform:translateY(-6px) scale(0.9); } 50% { transform:translateY(8px) scale(1.05); } 100% { transform:translateY(-6px) scale(0.95); } }
-@keyframes conf2{ 0% { transform:translateY(0) scale(1); } 50% { transform:translateY(-10px) scale(1.04); } 100% { transform:translateY(0) scale(1); } }
-@keyframes conf3{ 0% { transform:translateY(-2px) scale(0.95); } 50% { transform:translateY(6px) scale(1.06); } 100% { transform:translateY(-2px) scale(0.95); } }
-@keyframes conf4{ 0% { transform:translateY(-8px) scale(0.9); } 50% { transform:translateY(8px) scale(1.08); } 100% { transform:translateY(-8px) scale(0.9); } }
-@keyframes conf5{ 0% { transform:translateY(-4px) scale(0.92); } 50% { transform:translateY(10px) scale(1.06); } 100% { transform:translateY(-4px) scale(0.92); } }
-
-/* small screen adjustments */
-@media (max-width:720px){
-  .card-wrapper{ min-height:380px; }
-  .greeting-card{ width:86%; height:auto; padding:16px; }
-  .card-message{ max-width:92%; font-size:0.98rem; }
-  .envelope{ height:300px; }
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:flex-start;
 }
 
+/* Title */
+.card-title{
+  font-size:1.25rem;
+  margin: 8px 0;
+  color:#ff4f95;
+  font-weight:900;
+  text-align:center;
+}
+
+/* message box: make it the scrollable area inside the card */
+.card-message{
+  background: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(255,255,255,0.99));
+  padding: 12px;
+  margin: 6px auto 8px;
+  border-radius: 10px;
+  box-shadow: 0 8px 22px rgba(0,0,0,0.06);
+  color: #222;
+  width: 94%;
+  max-width: 94%;
+  text-align: left;
+  font-size: 0.98rem;
+  line-height: 1.48;
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow: auto;             /* enable scrolling of long message */
+  -webkit-overflow-scrolling: touch;
+  max-height: 170px;         /* keeps the card compact; user can scroll */
+}
+
+/* footer area for restart button */
+.card-footer{
+  margin-top:6px;
+  display:flex;
+  justify-content:center;
+  gap:10px;
+}
+
+/* confetti dots behind (keeps same visuals) */
+.card-confetti{ z-index:5; pointer-events:none; }
+
+/* decorative icons */
+.card-decor { font-size:16px; }
+.card-decor.top-left{ left:12%; top:16%; }
+.card-decor.bottom-right{ right:12%; bottom:16%; }
+
+/* small screens adjustments */
+@media (max-width:720px) {
+  .card-wrapper{ min-height: 320px; margin: 6px auto 12px; }
+  .envelope{ height:280px; }
+  .envelope-back{ height:260px; bottom:6px; }
+  .greeting-card{ width:86%; height:auto; padding:12px; }
+  .card-message{ max-height: 220px; font-size:0.96rem; }
+  .card-title{ font-size:1.12rem; }
+}
+
+/* very small phones */
+@media (max-width:420px) {
+  .mem-wrap{ height:420px; }
+  .card-message{ max-height: 200px; font-size:0.95rem; padding:10px; }
+  .card-title{ font-size:1.05rem; }
+  .ribbon-center{ font-size:0.82rem; padding:6px 10px; }
+}
 
 /* CONFETTI LAYER */
 .confetti-canvas{
