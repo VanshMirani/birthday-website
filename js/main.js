@@ -64,9 +64,8 @@ const confettiCtx = confettiCanvas.getContext("2d");
 
 const bdayAudio = document.getElementById("bdayAudio");
 
-
 /* =============================
-     PAGE SWITCHING (FIXED)
+     PAGE SWITCHING (fixed)
 ============================= */
 function originalShowPage(el){
   document.querySelectorAll(".page").forEach(p => p.classList.add("hidden"));
@@ -87,12 +86,15 @@ const showPage = function(el){
         bdayAudio.volume = 0.85;
         bdayAudio.play().catch(()=>{});
       } catch(e){}
-
       setTimeout(() => startAutoListeningOnCake(), 350);
     }, 400);
   }
-};
 
+  // when opening final card page, parse twemoji (if available)
+  if (el === pageCard){
+    setTimeout(parseCardEmojis, 160);
+  }
+};
 
 /* =============================
         START BUTTON
@@ -102,7 +104,6 @@ startBtn.addEventListener("click", () => {
   showPage(pageCountdown);
   startCountdown();
 });
-
 
 /* =============================
       COUNTDOWN TIMER
@@ -141,13 +142,13 @@ function startCountdown(){
   countdownTimer = setInterval(tick, 1000);
 }
 
-
 /* =============================
         3 → 2 → 1 ANIMATION
 ============================= */
 function show3to1(){
-  document.getElementById("countdown").classList.add("hidden");
-  onDateEl.classList.remove("hidden");
+  const cd = document.getElementById("countdown");
+  if (cd) cd.classList.add("hidden");
+  if (onDateEl) onDateEl.classList.remove("hidden");
 
   let numbers = [3,2,1];
   let idx = 0;
@@ -177,30 +178,26 @@ function show3to1(){
   animate();
 }
 
-
 /* =============================
          CAKE INTERACTION
 ============================= */
 let blown = false;
 
-cakeSvg.addEventListener("click", () => {
-  if(blown) return;
-  blown = true;
-
-  extinguishCandles();
-
-  setTimeout(()=>{
-    startConfetti();
-    afterBlowBtn.classList.remove("hidden");
-  }, 900);
-});
-
+if (cakeSvg) {
+  cakeSvg.addEventListener("click", () => {
+    if(blown) return;
+    blown = true;
+    extinguishCandles();
+    setTimeout(()=>{
+      startConfetti();
+      afterBlowBtn.classList.remove("hidden");
+    }, 900);
+  });
+}
 afterBlowBtn.addEventListener("click", showNotesPage);
 
-
 function extinguishCandles(){
-  candlesGroup.classList.add("candle-extinguished");
-
+  if (candlesGroup) candlesGroup.classList.add("candle-extinguished");
   document.querySelectorAll(".flame-core").forEach(f=>{
     f.animate(
       [
@@ -211,7 +208,6 @@ function extinguishCandles(){
     );
   });
 }
-
 
 /* =============================
           CONFETTI
@@ -258,7 +254,6 @@ function updateConfetti(){
   if(confetti.length > 0) requestAnimationFrame(updateConfetti);
 }
 
-
 /* =============================
         NOTES PAGE
 ============================= */
@@ -277,16 +272,12 @@ function showNotesPage(){
   });
 }
 
-
 /* =============================
         FLASHBACK PAGE
 ============================= */
 toFlashbackBtn.addEventListener("click", () => showPage(pageFlashback));
-
 toCardBtn.addEventListener("click", () => showPage(pageCard));
-
 restartBtn.addEventListener("click", () => location.reload());
-
 
 /* =============================
      MICROPHONE PERMISSION
@@ -301,7 +292,6 @@ let micAnim = null;
 
 function requestMicPermissionIfNeeded(){
   if(micReady) return;
-
   if(!navigator.mediaDevices) return;
 
   navigator.mediaDevices.getUserMedia({ audio:true })
@@ -317,7 +307,6 @@ function requestMicPermissionIfNeeded(){
     })
     .catch(()=>{});
 }
-
 
 function startAutoListeningOnCake(){
   if(blown || !micReady || micListening) return;
@@ -346,7 +335,7 @@ function startAutoListeningOnCake(){
         blown = true;
         stopMic();
         extinguishCandles();
-        setTimeout(()=>{ startConfetti(); afterBlowBtn.classList.remove("hidden"); }, 800);
+        setTimeout(()=>{ startConfetti(); afterBlowBtn.classList.remove('hidden'); }, 800);
         return;
       }
     } else {
@@ -377,7 +366,6 @@ function stopMic(){
   }
 }
 
-
 /* =============================
         DRAGGABLE MEMORIES
 ============================= */
@@ -389,6 +377,8 @@ function enableDrag(){
   const originals = new Map();
 
   imgs.forEach(img=>{
+    // set initial percent positions if not set
+    if(!img.style.left) img.style.left = img.classList.contains('m1') ? '50%' : img.style.left;
     originals.set(img,{
       left: img.style.left,
       top: img.style.top
@@ -417,11 +407,11 @@ function enableDrag(){
       let newLeft = leftPct + (dx / parent.width)*100;
       let newTop  = topPct + (dy / parent.height)*100;
 
-      img.style.left = `${newLeft}%`;
-      img.style.top  = `${newTop}%`;
+      img.style.left = `${Math.min(94, Math.max(6, newLeft))}%`;
+      img.style.top  = `${Math.min(94, Math.max(6, newTop))}%`;
     }
     function stop(ev){
-      img.releasePointerCapture(ev.pointerId);
+      try { img.releasePointerCapture(ev.pointerId); } catch(e){}
       img.removeEventListener("pointermove", move);
       img.removeEventListener("pointerup", stop);
     }
@@ -436,12 +426,10 @@ enableDrag();
 /* =========================
    Twemoji: replace emojis in final card with images
    ========================= */
-
 function parseCardEmojis() {
   if (typeof window.twemoji === "undefined") return;
   const el = document.getElementById("cardMsg");
   if (!el) return;
-
   try {
     twemoji.parse(el, {
       folder: "svg",
@@ -453,99 +441,58 @@ function parseCardEmojis() {
     console.warn("Twemoji parse failed:", e);
   }
 }
-
-// Run on initial load
 document.addEventListener("DOMContentLoaded", () => {
   parseCardEmojis();
+  // Request mic permission early (non-blocking)
+  // requestMicPermissionIfNeeded(); // optional: keep commented to respect user's autoplay/audio preference
 });
 
-// Hook into your page change logic
-(function wrapShowPageForEmojis(){
-  if (typeof window.showPage !== "function") return;
+/* =============================
+     FLOATERS (hearts & balloons)
+============================= */
+(function initFloaters(){
+  const root = document.querySelector(".floaters");
+  if(!root) return;
 
-  const originalShowPage = window.showPage;
-  window.showPage = function(el){
-    originalShowPage(el);
-    if (el && el.id === "page-card") {
-      setTimeout(parseCardEmojis, 180);
-    }
-  };
-})();
-
-/* ------------- Page-turn & floaters (fixed) ------------- */
-(function(){
-  // Page-turn toggle (center-based flip)
-  const greetingCard = document.getElementById('greetingCard');
-  if(greetingCard){
-    greetingCard.addEventListener('click', toggleTurn);
-    greetingCard.addEventListener('keydown', (e) => { if(e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleTurn(); } });
-
-    function toggleTurn(){
-      const turned = greetingCard.classList.toggle('turned');
-
-      // temporarily raise z-index strongly while turned to avoid overlap with envelope
-      if(turned){
-        greetingCard.style.zIndex = 9999;
-      } else {
-        // small delay to allow animation finish before lowering z-index
-        setTimeout(()=> greetingCard.style.zIndex = 1500, 520);
-      }
-
-      // set ARIA hidden appropriately: front is index 0, back index 1
-      const faces = greetingCard.querySelectorAll('.card-face');
-      if(faces.length >= 2){
-        faces[0].setAttribute('aria-hidden', turned ? 'true' : 'false');
-        faces[1].setAttribute('aria-hidden', turned ? 'false' : 'true');
-      }
-    }
-  }
-
-  // Floaters spawner (unchanged general idea, slightly safer)
-  const floatersRoot = document.querySelector('.floaters');
-  if(!floatersRoot) return;
-
-  const floaterTypes = [
-    { type: 'heart', char: '💖' },
-    { type: 'heart', char: '💗' },
-    { type: 'heart', char: '❤️' },
-    { type: 'balloon', color: '#ffd1e8' },
-    { type: 'balloon', color: '#ffd87a' },
-    { type: 'balloon', color: '#7ee7c4' }
+  const types = [
+    { t:'heart', ch:'💖' },
+    { t:'heart', ch:'💗' },
+    { t:'heart', ch:'❤️' },
+    { t:'balloon', col:'#ffd1e8' },
+    { t:'balloon', col:'#ffd87a' },
+    { t:'balloon', col:'#7ee7c4' }
   ];
 
-  function spawnFloater(){
-    const pick = floaterTypes[Math.floor(Math.random()*floaterTypes.length)];
-    const el = document.createElement('div');
-    el.className = 'floater ' + pick.type;
-    // set horizontal position within parent
-    const startLeft = (8 + Math.random()*84);
-    el.style.left = startLeft + '%';
-
-    const dur = 7 + Math.random()*6; // 7-13s
+  function spawn(){
+    const pick = types[Math.floor(Math.random()*types.length)];
+    const el = document.createElement("div");
+    el.className = `floater ${pick.t}`;
+    el.style.left = `${8 + Math.random()*84}%`;
+    const dur = 7 + Math.random()*6;
     el.style.animation = `floatUp ${dur}s linear forwards`;
 
-    if(pick.type === 'heart'){
-      el.textContent = pick.char;
-      el.style.fontSize = (16 + Math.random()*18) + 'px';
+    if(pick.t === 'heart'){
+      el.textContent = pick.ch;
+      el.style.fontSize = `${14 + Math.random()*20}px`;
       el.style.lineHeight = '36px';
     } else {
-      el.classList.add('sway');
-      const base = pick.color || '#ffd1e8';
-      el.style.background = `linear-gradient(180deg, ${base}, ${shadeColor(base, -20)})`;
+      el.style.width = `${18 + Math.random()*18}px`;
+      el.style.height = `${26 + Math.random()*20}px`;
+      const base = pick.col || '#ffd1e8';
+      el.style.background = `linear-gradient(180deg, ${base}, ${shadeColor(base, -18)})`;
+      el.style.borderRadius = '14px';
     }
 
-    floatersRoot.appendChild(el);
-    // cleanup
+    root.appendChild(el);
     setTimeout(()=> { try{ el.remove(); }catch(e){} }, (dur*1000)+1200);
   }
 
-  // initial few floaters for immediate feel
-  spawnFloater();
-  setTimeout(spawnFloater, 400);
-  const FLOATER_INTERVAL = 1200;
-  const floaterTimer = setInterval(spawnFloater, FLOATER_INTERVAL);
+  spawn();
+  setTimeout(spawn, 500);
+  const timer = setInterval(spawn, 1200);
 
-  // helper to darken color
+  window.addEventListener('beforeunload', ()=> clearInterval(timer));
+
   function shadeColor(hex, change) {
     const c = hex.replace('#','');
     const num = parseInt(c,16);
@@ -554,13 +501,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const b = Math.max(0, Math.min(255, (num & 0x0000FF) + change));
     return '#' + ( (1<<24) + (r<<16) + (g<<8) + b ).toString(16).slice(1);
   }
-
-  // cleanup on page unload
-  window.addEventListener('beforeunload', ()=> {
-    clearInterval(floaterTimer);
-  });
 })();
 
 /* CLEANUP */
 window.addEventListener("beforeunload", stopMic);
-
