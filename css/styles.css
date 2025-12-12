@@ -200,49 +200,151 @@ body{
 .m7{ top:46%; left:8%; transform:translate(-50%,-50%); }
 .m8{ top:18%; left:18%; transform:translate(-50%,-50%); }
 
-/* FINAL CARD (static) */
+/* ============================
+      FINAL CARD (STATIC)
+============================ */
+
 .card-wrapper{
   position:relative;
   width:100%;
   display:flex;
   justify-content:center;
   margin-top:20px;
+  z-index:5;
 }
+
 .greeting-card{
   width:88%;
   max-width:720px;
-  background: linear-gradient(180deg,#fff,#fff8fb);
+  background: linear-gradient(180deg,#ffffff,#fff8fb);
   border-radius:18px;
   padding:22px;
   box-shadow:0 28px 80px rgba(0,0,0,0.12);
-  max-height:72vh;              /* fits mobile */
+  max-height:72vh;                /* scrollable and large size */
   overflow-y:auto;
   -webkit-overflow-scrolling: touch;
+  position:relative;
+  z-index:10;
+  border:2px solid #ff8ecb;
 }
-.static-card-inner{ display:flex; flex-direction:column; gap:12px; align-items:flex-start; }
-.card-title{ font-size:1.6rem; font-weight:800; margin:0 auto 6px; text-align:center; }
-.card-message{ width:100%; }
 
-/* decorative envelope/ribbon behind card */
-.envelope-back{ position:absolute; left:50%; top:12%; transform:translateX(-50%); width:96%; height:120px; border-radius:12px; background:linear-gradient(90deg, rgba(255,111,163,0.06), rgba(126,231,196,0.04)); z-index:0; }
-.envelope{ position:absolute; left:50%; top:24%; transform:translateX(-50%); width:92%; height:80px; z-index:1; pointer-events:none; }
-.envelope-body{ background:linear-gradient(180deg,#fff,#fff6f6); border-radius:12px; height:100%; box-shadow:0 12px 36px rgba(0,0,0,0.08); display:flex; align-items:center; justify-content:center; }
-.ribbon{ position:absolute; top:-18px; left:50%; transform:translateX(-50%); display:flex; align-items:center; gap:8px; }
+/* Inner layout */
+.static-card-inner{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  align-items:flex-start;
+}
 
-/* ribbon center */
-.ribbon-center{ background:linear-gradient(90deg,var(--accent1),var(--accent2)); color:white; padding:6px 12px; border-radius:12px; font-weight:800; box-shadow:0 8px 20px rgba(255,111,163,0.12); }
+.card-title{
+  font-size:1.7rem;
+  font-weight:900;
+  margin:0 auto 8px;
+  text-align:center;
+  color:#ff2f8a;
+}
 
-/* FLOATERS (hearts & balloons) */
-.floaters{ position:absolute; inset:0; pointer-events:none; z-index:0; overflow:hidden; }
-.floater{ position:absolute; bottom:-8%; display:block; transform:translateY(0); opacity:0.98; }
-.floater.heart{ font-size:20px; }
-.floater.balloon{ width:26px; height:36px; border-radius:14px; box-shadow:0 6px 18px rgba(0,0,0,0.08); }
+.card-message{
+  width:100%;
+  font-size:1rem;
+  line-height:1.55;
+  white-space:pre-wrap;
+  color:#333;
+}
 
-/* float animation */
+/* ============================
+   ENVELOPE + RIBBON BEHIND
+============================ */
+.envelope-back{
+  position:absolute;
+  left:50%;
+  top:12%;
+  transform:translateX(-50%);
+  width:96%;
+  height:120px;
+  border-radius:12px;
+  background:linear-gradient(90deg, rgba(255,111,163,0.08), rgba(126,231,196,0.06));
+  z-index:0;
+}
+
+.envelope{
+  position:absolute;
+  left:50%;
+  top:24%;
+  transform:translateX(-50%);
+  width:92%;
+  height:80px;
+  z-index:1;
+  pointer-events:none;
+}
+
+.envelope-body{
+  background:linear-gradient(180deg,#fff,#fff6f6);
+  border-radius:12px;
+  height:100%;
+  box-shadow:0 12px 36px rgba(0,0,0,0.08);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.ribbon{
+  position:absolute;
+  top:-18px;
+  left:50%;
+  transform:translateX(-50%);
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+.ribbon-center{
+  background:linear-gradient(90deg,var(--accent1),var(--accent2));
+  color:white;
+  padding:6px 14px;
+  border-radius:14px;
+  font-weight:800;
+  box-shadow:0 8px 22px rgba(255,111,163,0.18);
+}
+
+/* ============================
+      FLOATING HEARTS/BALLOONS
+============================ */
+.floaters{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  z-index:0;
+  overflow:hidden;
+}
+
+.floater{
+  position:absolute;
+  bottom:-8%;
+  display:block;
+  opacity:0.95;
+  animation: floatUp 8s linear forwards;
+}
+
+/* Hearts */
+.floater.heart{
+  font-size:22px;
+}
+
+/* Balloons */
+.floater.balloon{
+  width:26px;
+  height:36px;
+  border-radius:14px;
+  background:#ffd1e8;
+  box-shadow:0 6px 18px rgba(0,0,0,0.08);
+}
+
+/* Floating motion */
 @keyframes floatUp {
-  0% { transform: translateY(0) scale(1); opacity:0.95; }
+  0% { transform: translateY(0) scale(1); opacity:0.85; }
   20% { opacity:1; }
-  100% { transform: translateY(-130vh) scale(1.05); opacity:0.0; }
+  100% { transform: translateY(-130vh) scale(1.05); opacity:0; }
 }
 
 /* CONFETTI LAYER */
