@@ -2,7 +2,7 @@
       CONFIGURATION
 ============================= */
 const birthdayYear = new Date().getFullYear();
-const birthdayMonth = 12;  // December
+const birthdayMonth = 11;  // December
 const birthdayDay = 13;
 
 const NOTES = [
@@ -432,6 +432,45 @@ function enableDrag(){
 }
 
 enableDrag();
+
+/* =========================
+   Twemoji: replace emojis in final card with images
+   ========================= */
+
+function parseCardEmojis() {
+  if (typeof window.twemoji === "undefined") return;
+  const el = document.getElementById("cardMsg");
+  if (!el) return;
+
+  try {
+    twemoji.parse(el, {
+      folder: "svg",
+      ext: ".svg",
+      className: "twemoji-img",
+      base: "https://twemoji.maxcdn.com/v/latest/"
+    });
+  } catch (e) {
+    console.warn("Twemoji parse failed:", e);
+  }
+}
+
+// Run on initial load
+document.addEventListener("DOMContentLoaded", () => {
+  parseCardEmojis();
+});
+
+// Hook into your page change logic
+(function wrapShowPageForEmojis(){
+  if (typeof window.showPage !== "function") return;
+
+  const originalShowPage = window.showPage;
+  window.showPage = function(el){
+    originalShowPage(el);
+    if (el && el.id === "page-card") {
+      setTimeout(parseCardEmojis, 180);
+    }
+  };
+})();
 
 
 /* CLEANUP */
