@@ -2,7 +2,7 @@
       CONFIGURATION
 ============================= */
 const birthdayYear = new Date().getFullYear();
-const birthdayMonth = 11;  // December
+const birthdayMonth = 12;  // December
 const birthdayDay = 13;
 
 const NOTES = [
