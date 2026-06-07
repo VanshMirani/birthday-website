@@ -2,13 +2,13 @@
       CONFIGURATION
 ============================= */
 const birthdayYear = new Date().getFullYear();
-const birthdayMonth = 12;  // December
-const birthdayDay = 13;
+const birthdayMonth = 09;  
+const birthdayDay = 23;
 
 const NOTES = [
   "Lucky to have you as my best friend ✨",
   "Missing our daily talks and roj ni bakchodi so much!!",
-  "Wishing you the happiest birthday, My Dhakkan 🌅💖",
+  "Wishing you the happiest birthday, My (Nickname) 🌅💖",
   "Thank you for always being there for me and understanding me so well 💖",
   "Hoping this next year becomes the best one of your life 💎✨",
   "Always ther for you whenever you need me Beta💖💖"
