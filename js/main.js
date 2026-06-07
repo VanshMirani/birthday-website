@@ -15,14 +15,14 @@ const NOTES = [
 ];
 
 const GALLERY_IMAGES = [
-  "assets/images/photo1.jpeg",
-  "assets/images/photo2.jpeg",
-  "assets/images/photo3.jpeg",
-  "assets/images/photo4.jpeg",
-  "assets/images/photo5.jpeg",
-  "assets/images/photo6.jpeg",
-  "assets/images/photo7.jpeg",
-  "assets/images/photo8.jpeg"
+  "assets/images/photos1.jpeg",
+  "assets/images/photos2.jpeg",
+  "assets/images/photos3.jpeg",
+  "assets/images/photos4.jpeg",
+  "assets/images/photos5.jpeg",
+  "assets/images/photos6.jpeg",
+  "assets/images/photos7.jpeg",
+  "assets/images/photos8.jpeg"
 ];
 
 const MIC_SETTINGS = {
